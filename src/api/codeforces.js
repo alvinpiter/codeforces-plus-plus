@@ -19,6 +19,14 @@ function submissionMapper(submission) {
   }
 }
 
+export async function getProblemsetProblems() {
+  const url = `${codeforcesBaseURL}/problemset.problems`
+  const jsonResponse = await get(url)
+  const problems = jsonResponse.result.problems.map(problem => problemMapper(problem))
+
+  return problems
+}
+
 export async function getUserSubmissions(handle) {
   const url = `${codeforcesBaseURL}/user.status?handle=${handle}`
   const jsonResponse = await get(url)
