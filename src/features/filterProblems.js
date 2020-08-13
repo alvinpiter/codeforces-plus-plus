@@ -1,4 +1,8 @@
 /*
+TODO: filterByIDs is slow because we have to initialize a new Set everytime.
+*/
+
+/*
 Given an array of problems, filter out problems which fulfills
 all the filterParameters. Supported filterParameters are:
 * filter by rating. Format:
