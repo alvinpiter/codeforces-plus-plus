@@ -22,7 +22,7 @@ function submissionMapper(submission) {
 export async function getProblemsetProblems() {
   const url = `${codeforcesBaseURL}/problemset.problems`
   const jsonResponse = await get(url)
-  const problems = jsonResponse.result.problems.map(problem => problemMapper(problem))
+  const problems = jsonResponse.result.problems.map(problemMapper)
 
   return problems
 }
@@ -30,7 +30,7 @@ export async function getProblemsetProblems() {
 export async function getUserSubmissions(handle) {
   const url = `${codeforcesBaseURL}/user.status?handle=${handle}`
   const jsonResponse = await get(url)
-  const submissions = jsonResponse.result.map(submission => submissionMapper(submission))
+  const submissions = jsonResponse.result.map(submissionMapper)
 
   return submissions
 }
