@@ -19,6 +19,11 @@ tags: {
   tags: ["implementation", "greedy"]
 }
 
+* filter by id. Format:
+ids: {
+  mode: "EXCLUDE"/"INCLUDE",
+  ids: ["1A", "2B"]
+}
 */
 export function filterProblems(problems, filterParameters) {
   const filterFunction = buildFilterFunction(filterParameters)
@@ -39,6 +44,10 @@ function buildFilterFunction(filterParameters) {
 
     if (filterParameters.hasOwnProperty('tags')) {
       ok = ok && filterByTags(problem, filterParameters.tags)
+    }
+
+    if (filterParameters.hasOwnProperty('ids')) {
+      ok = ok && filterByIDs(problem, filterParameters.ids)
     }
 
     return ok
@@ -85,4 +94,14 @@ function filterByTagsWithOR(problem, tags) {
   }
 
   return false
+}
+
+function filterByIDs(problem, idsFilter) {
+  let idsSet = new Set(idsFilter.ids)
+
+  if (idsFilter.mode === "EXCLUDE") {
+    return !idsSet.has(problem.id)
+  } else {
+    return idsSet.has(problem.id)
+  }
 }
