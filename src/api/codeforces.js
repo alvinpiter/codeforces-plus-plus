@@ -5,6 +5,7 @@ const codeforcesBaseURL = 'https://codeforces.com/api'
 function problemMapper(problem) {
   return {
     id: `${problem.contestId}${problem.index}`,
+    contestID: problem.contestId,
     name: problem.name,
     rating: problem.rating,
     tags: problem.tags
