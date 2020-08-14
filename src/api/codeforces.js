@@ -35,3 +35,20 @@ export async function getUserSubmissions(handle) {
 
   return submissions
 }
+
+export async function getUserRatingHistory(handle) {
+  const url = `${codeforcesBaseURL}/user.rating?handle=${handle}`
+  const jsonResponse = await get(url)
+  const ratingHistory = jsonResponse.result
+
+  return ratingHistory
+}
+
+//handles is array of handle
+export async function getContestStandings(contestID, handles) {
+  const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&handles=${handles.join(';')}`
+  const jsonResponse = await get(url)
+  const contestStandings = jsonResponse.result
+
+  return contestStandings
+}
