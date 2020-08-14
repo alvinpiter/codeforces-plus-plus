@@ -1,8 +1,4 @@
 /*
-TODO: filterByIDs is slow because we have to initialize a new Set everytime.
-*/
-
-/*
 Given an array of problems, filter out problems which fulfills
 all the filterParameters. Supported filterParameters are:
 * filter by rating. Format:
@@ -30,82 +26,88 @@ ids: {
 }
 */
 export function filterProblems(problems, filterParameters) {
-  const filterFunction = buildFilterFunction(filterParameters)
-  return problems.filter(filterFunction)
-}
-
-function buildFilterFunction(filterParameters) {
-  return (problem) => {
-    let ok = true;
-
-    if (filterParameters.hasOwnProperty('rating')) {
-      ok = ok && filterByRating(problem, filterParameters.rating)
-    }
-
-    if (filterParameters.hasOwnProperty('contestID')) {
-      ok = ok && filterByContestID(problem, filterParameters.contestID)
-    }
-
-    if (filterParameters.hasOwnProperty('tags')) {
-      ok = ok && filterByTags(problem, filterParameters.tags)
-    }
-
-    if (filterParameters.hasOwnProperty('ids')) {
-      ok = ok && filterByIDs(problem, filterParameters.ids)
-    }
-
-    return ok
+  const keyToFilterFunctionMap = {
+    'rating': filterProblemsByRating,
+    'contestID': filterProblemsByContestID,
+    'tags': filterProblemsByTags,
+    'ids': filterProblemsByIDs
   }
+
+  for (let entry of Object.entries(keyToFilterFunctionMap)) {
+    const key = entry[0]
+    const filterFunction = entry[1]
+
+    if (filterParameters.hasOwnProperty(key))
+      problems = filterFunction(problems, filterParameters[key])
+  }
+
+  return problems
 }
 
-function filterByRating(problem, ratingFilter) {
+function filterProblemsByRating(problems, ratingFilter) {
   const minRating = ratingFilter.minimum
   const maxRating = ratingFilter.maximum
 
-  return (problem.rating >= minRating && problem.rating <= maxRating)
+  return problems.filter(problem =>
+    problem.rating >= minRating && problem.rating <= maxRating
+  )
 }
 
-function filterByContestID(problem, contestIDFilter) {
+function filterProblemsByContestID(problems, contestIDFilter) {
   const minContestID = contestIDFilter.minimum
   const maxContestID = contestIDFilter.maximum
 
-  return (problem.contestID >= minContestID && problem.contestID <= maxContestID)
+  return problems.filter(problem =>
+    problem.contestID >= minContestID && problem.contestID <= maxContestID
+  )
 }
 
-function filterByTags(problem, tagsFilter) {
+function filterProblemsByTags(problems, tagsFilter) {
   if (tagsFilter.mode === "AND") {
-    return filterByTagsWithAND(problem, tagsFilter.tags)
+    return filterProblemsByTagsWithAnd(problems, tagsFilter.tags)
   } else {
-    return filterByTagsWithOR(problem, tagsFilter.tags)
+    return filterProblemsByTagsWithOr(problems, tagsFilter.tags)
   }
 }
 
-function filterByTagsWithAND(problem, tags) {
-  let problemTagsSet = new Set(problem.tags)
-  for (let tag of tags) {
-    if (!problemTagsSet.has(tag))
-      return false
-  }
+function filterProblemsByTagsWithAnd(problems, tags) {
+  return problems.filter(problem => {
+    const problemTagsSet = new Set(problem.tags)
+    for (let tag of tags) {
+      if (!problemTagsSet.has(tag))
+        return false
+    }
 
-  return true
+    return true
+  })
 }
 
-function filterByTagsWithOR(problem, tags) {
+function filterProblemsByTagsWithOr(problems, tags) {
   let tagsSet = new Set(tags)
-  for (let tag of problem.tags) {
-    if (tagsSet.has(tag))
-      return true
-  }
+  return problems.filter(problem => {
+    for (let tag of problem.tags) {
+      if (tagsSet.has(tag))
+        return true
+    }
 
-  return false
+    return false
+  })
 }
 
-function filterByIDs(problem, idsFilter) {
-  let idsSet = new Set(idsFilter.ids)
-
+function filterProblemsByIDs(problems, idsFilter) {
   if (idsFilter.mode === "EXCLUDE") {
-    return !idsSet.has(problem.id)
+    return filterProblemsByIDsWithExclude(problems, idsFilter.ids)
   } else {
-    return idsSet.has(problem.id)
+    return filterProblemsByIDsWithInclude(problems, idsFilter.ids)
   }
+}
+
+function filterProblemsByIDsWithExclude(problems, ids) {
+  let idsSet = new Set(ids)
+  return problems.filter(problem => !idsSet.has(problem.id))
+}
+
+function filterProblemsByIDsWithInclude(problems, ids) {
+  let idsSet = new Set(ids)
+  return problems.filter(problem => idsSet.has(problem.id))
 }
