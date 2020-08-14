@@ -27,10 +27,10 @@ ids: {
 */
 export function filterProblems(problems, filterParameters) {
   const keyToFilterFunctionMap = {
-    'rating': filterByRating,
-    'contestID': filterByContestID,
-    'tags': filterByTags,
-    'ids': filterByIDs
+    'rating': filterProblemsByRating,
+    'contestID': filterProblemsByContestID,
+    'tags': filterProblemsByTags,
+    'ids': filterProblemsByIDs
   }
 
   for (let entry of Object.entries(keyToFilterFunctionMap)) {
@@ -44,7 +44,7 @@ export function filterProblems(problems, filterParameters) {
   return problems
 }
 
-function filterByRating(problems, ratingFilter) {
+function filterProblemsByRating(problems, ratingFilter) {
   const minRating = ratingFilter.minimum
   const maxRating = ratingFilter.maximum
 
@@ -53,7 +53,7 @@ function filterByRating(problems, ratingFilter) {
   )
 }
 
-function filterByContestID(problems, contestIDFilter) {
+function filterProblemsByContestID(problems, contestIDFilter) {
   const minContestID = contestIDFilter.minimum
   const maxContestID = contestIDFilter.maximum
 
@@ -62,15 +62,15 @@ function filterByContestID(problems, contestIDFilter) {
   )
 }
 
-function filterByTags(problems, tagsFilter) {
+function filterProblemsByTags(problems, tagsFilter) {
   if (tagsFilter.mode === "AND") {
-    return filterByTagsWithAnd(problems, tagsFilter.tags)
+    return filterProblemsByTagsWithAnd(problems, tagsFilter.tags)
   } else {
-    return filterByTagsWithOr(problems, tagsFilter.tags)
+    return filterProblemsByTagsWithOr(problems, tagsFilter.tags)
   }
 }
 
-function filterByTagsWithAnd(problems, tags) {
+function filterProblemsByTagsWithAnd(problems, tags) {
   return problems.filter(problem => {
     const problemTagsSet = new Set(problem.tags)
     for (let tag of tags) {
@@ -82,7 +82,7 @@ function filterByTagsWithAnd(problems, tags) {
   })
 }
 
-function filterByTagsWithOr(problems, tags) {
+function filterProblemsByTagsWithOr(problems, tags) {
   let tagsSet = new Set(tags)
   return problems.filter(problem => {
     for (let tag of problem.tags) {
@@ -94,20 +94,20 @@ function filterByTagsWithOr(problems, tags) {
   })
 }
 
-function filterByIDs(problems, idsFilter) {
+function filterProblemsByIDs(problems, idsFilter) {
   if (idsFilter.mode === "EXCLUDE") {
-    return filterByIDsWithExclude(problems, idsFilter.ids)
+    return filterProblemsByIDsWithExclude(problems, idsFilter.ids)
   } else {
-    return filterByIDsWithInclude(problems, idsFilter.ids)
+    return filterProblemsByIDsWithInclude(problems, idsFilter.ids)
   }
 }
 
-function filterByIDsWithExclude(problems, ids) {
+function filterProblemsByIDsWithExclude(problems, ids) {
   let idsSet = new Set(ids)
   return problems.filter(problem => !idsSet.has(problem.id))
 }
 
-function filterByIDsWithInclude(problems, ids) {
+function filterProblemsByIDsWithInclude(problems, ids) {
   let idsSet = new Set(ids)
   return problems.filter(problem => idsSet.has(problem.id))
 }
