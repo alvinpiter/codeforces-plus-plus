@@ -1,22 +1,22 @@
 import {
-  getUserInfo,
+  getUserInfos,
   getContestStandings,
   getContestRatingChanges
 } from '../api/codeforces'
 
 export async function aggregateStandings(contestID) {
   let standings = await getContestStandings(contestID, [])
-  let ratingChanges = await getContestRatingChanges(contestID)
+  let contestRatingChanges = await getContestRatingChanges(contestID)
 
-  const ratingChangeMap = getRatingChangeMap(ratingChanges)
+  const userRatingChangeMap = getUserRatingChangeMap(contestRatingChanges)
   const userInfoMap = await getUserInfoMap(standings.rows)
 
   let rankListRows = []
   for (let row of standings.rows) {
     const handle = row.party.members[0].handle
 
-    if (ratingChangeMap.has(handle))
-      row.ratingChange = ratingChangeMap.get(handle)
+    if (userRatingChangeMap.has(handle))
+      row.ratingChange = userRatingChangeMap.get(handle)
 
     if (userInfoMap.has(handle))
       row.userInfo = userInfoMap.get(handle)
@@ -29,19 +29,19 @@ export async function aggregateStandings(contestID) {
   return standings
 }
 
-function getRatingChangeMap(ratingChanges) {
-  let ratingChangeMap = new Map()
-  for (let rc of ratingChanges) {
+function getUserRatingChangeMap(contestRatingChanges) {
+  let userRatingChangeMap = new Map()
+  for (let rc of contestRatingChanges) {
     const handle = rc.handle
     const ratingChange = {
       oldRating: rc.oldRating,
       newRating: rc.newRating
     }
 
-    ratingChangeMap.set(handle, ratingChange)
+    userRatingChangeMap.set(handle, ratingChange)
   }
 
-  return ratingChangeMap
+  return userRatingChangeMap
 }
 
 async function getUserInfoMap(rankListRows) {
@@ -56,7 +56,7 @@ async function getUserInfoMap(rankListRows) {
     currentHandles.push(handle)
 
     if (currentHandles.length === 200) {
-      userInfoPromises.push(getUserInfo(currentHandles))
+      userInfoPromises.push(getUserInfos(currentHandles))
       currentHandles = []
 
       await new Promise(resolve => setTimeout(resolve, 300))
@@ -65,7 +65,7 @@ async function getUserInfoMap(rankListRows) {
 
   //check if there is leftovers
   if (currentHandles.length > 0) {
-    userInfoPromises.push(getUserInfo(currentHandles))
+    userInfoPromises.push(getUserInfos(currentHandles))
     currentHandles = []
   }
 

@@ -44,7 +44,7 @@ export async function getUserRatingHistory(handle) {
   return ratingHistory
 }
 
-export async function getUserInfo(handles) {
+export async function getUserInfos(handles) {
   const url = `${codeforcesBaseURL}/user.info?handles=${handles.join(';')}`
   const jsonResponse = await get(url)
   const userInfos = jsonResponse.result
