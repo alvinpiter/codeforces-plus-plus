@@ -44,6 +44,22 @@ export async function getUserRatingHistory(handle) {
   return ratingHistory
 }
 
+export async function getUserInfos(handles) {
+  const url = `${codeforcesBaseURL}/user.info?handles=${handles.join(';')}`
+  const jsonResponse = await get(url)
+  const userInfos = jsonResponse.result
+
+  return userInfos
+}
+
+export async function getContestList() {
+  const url = `${codeforcesBaseURL}/contest.list`
+  const jsonResponse = await get(url)
+  const contests = jsonResponse.result
+
+  return contests
+}
+
 //handles is array of handle
 export async function getContestStandings(contestID, handles) {
   const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&handles=${handles.join(';')}`
@@ -51,4 +67,12 @@ export async function getContestStandings(contestID, handles) {
   const contestStandings = jsonResponse.result
 
   return contestStandings
+}
+
+export async function getContestRatingChanges(contestID) {
+  const url = `${codeforcesBaseURL}/contest.ratingChanges?contestId=${contestID}`
+  const jsonResponse = await get(url)
+  const ratingChanges = jsonResponse.result
+
+  return ratingChanges
 }
