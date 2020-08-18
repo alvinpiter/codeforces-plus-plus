@@ -1,8 +1,11 @@
 import React from 'react';
+import ProblemsPage from './components/ProblemsPage'
 
 function App() {
   return (
-    <h1> Codeforces-plus-plus </h1>
+    <div>
+      <ProblemsPage></ProblemsPage>
+    </div>
   );
 }
 
