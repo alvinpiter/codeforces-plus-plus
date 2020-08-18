@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../api/codeforces'
+import ProblemsTable from './ProblemsTable'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
@@ -35,7 +36,11 @@ export default function ProblemsPage() {
         > Submit </Button>
       </FormGroup>
 
-      { isLoading && <CircularProgress /> }
+      {
+        isLoading ?
+        <CircularProgress /> :
+        <ProblemsTable rows={allProblems}/>
+      }
     </div>
   )
 }
