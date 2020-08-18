@@ -1,29 +1,33 @@
 /*
 Given an array of user submissions, filter out unique solved
-problem IDs and unique attempted problem IDs. The return will
-be an object whose values are Sets.
+problems and unique attempted problems. The return will
+be an object whose values are array of problems.
 */
 export function filterSubmissions(submissions) {
   let solvedProblemIDs = new Set()
+  let solvedProblems = []
   for (let submission of submissions) {
-    let problemID = submission.problem.id
+    let problem = submission.problem
 
-    if (submission.verdict === "OK") {
-      solvedProblemIDs.add(problemID)
+    if (submission.verdict === "OK" && !solvedProblemIDs.has(problem.id)) {
+      solvedProblemIDs.add(problem.id)
+      solvedProblems.push(problem)
     }
   }
 
   let attemptedProblemIDs = new Set()
+  let attemptedProblems = []
   for (let submission of submissions) {
-    let problemID = submission.problem.id
+    let problem = submission.problem
 
-    if (submission.verdict !== "OK" && !solvedProblemIDs.has(problemID)) {
-      attemptedProblemIDs.add(problemID)
+    if (submission.verdict !== "OK" && !attemptedProblemIDs.has(problem.id)) {
+      attemptedProblemIDs.add(problem.id)
+      attemptedProblems.push(problem)
     }
   }
 
   return {
-    solvedProblemIDs: solvedProblemIDs,
-    attemptedProblemIDs: attemptedProblemIDs
+    solvedProblems: solvedProblems,
+    attemptedProblems: attemptedProblems
   }
 }
