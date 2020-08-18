@@ -6,23 +6,23 @@ be an object whose values are array of problems.
 export function filterSubmissions(submissions) {
   let solvedProblemIDs = new Set()
   let solvedProblems = []
-  for (let submission of submissions) {
-    let problem = submission.problem
-
-    if (submission.verdict === "OK" && !solvedProblemIDs.has(problem.id)) {
-      solvedProblemIDs.add(problem.id)
-      solvedProblems.push(problem)
-    }
-  }
 
   let attemptedProblemIDs = new Set()
   let attemptedProblems = []
+
   for (let submission of submissions) {
     let problem = submission.problem
 
-    if (submission.verdict !== "OK" && !attemptedProblemIDs.has(problem.id)) {
-      attemptedProblemIDs.add(problem.id)
-      attemptedProblems.push(problem)
+    if (submission.verdict === "OK") {
+      if (!solvedProblemIDs.has(problem.id)) {
+        solvedProblemIDs.add(problem.id)
+        solvedProblems.push(problem)
+      }
+    } else {
+      if (!attemptedProblemIDs.has(problem.id)) {
+        attemptedProblemIDs.add(problem.id)
+        attemptedProblems.push(problem)
+      }
     }
   }
 
