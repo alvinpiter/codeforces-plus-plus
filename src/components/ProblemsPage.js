@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Col, Button, Spinner } from 'react-bootstrap'
-
+import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../api/codeforces'
 
 export default function ProblemsPage() {
@@ -23,28 +22,20 @@ export default function ProblemsPage() {
 
   return (
     <div>
-      <Form>
-        <Form.Row>
-          <Form.Group as={Col}>
-            <Form.Control
-              placeholder="Your handle"
-              onChange={e => setHandle(e.target.value)}
-            />
-          </Form.Group>
+      <FormGroup row={true}>
+        <TextField
+          label="Handle"
+          placeholder="Example: tourist"
+          onChange={e => setHandle(e.target.value)}
+        />
 
-          <Form.Group as={Col}>
-            <Button
-              type="submit"
-              onClick={e => {
-                e.preventDefault()
-                console.log(handle)
-              }}
-            > Submit</Button>
-          </Form.Group>
-        </Form.Row>
-      </Form>
+        <Button
+          variant="contained"
+          color="primary"
+        > Submit </Button>
+      </FormGroup>
 
-      { isLoading && <Spinner animation="border" /> }
+      { isLoading && <CircularProgress /> }
     </div>
   )
 }
