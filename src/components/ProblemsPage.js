@@ -1,8 +1,25 @@
-import React, { useState } from 'react'
-import { Form, Col, Button } from 'react-bootstrap'
+import React, { useState, useEffect } from 'react'
+import { Form, Col, Button, Spinner } from 'react-bootstrap'
+
+import { getProblemsetProblems } from '../api/codeforces'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [allProblems, setAllProblems] = useState([])
+
+  useEffect(() => {
+    const getAllProblems = async () => {
+      setIsLoading(true)
+
+      let problems = await getProblemsetProblems()
+
+      setIsLoading(false)
+      setAllProblems(problems)
+    }
+
+    getAllProblems()
+  }, [])
 
   return (
     <div>
@@ -26,6 +43,8 @@ export default function ProblemsPage() {
           </Form.Group>
         </Form.Row>
       </Form>
+
+      { isLoading && <Spinner animation="border" /> }
     </div>
   )
 }
