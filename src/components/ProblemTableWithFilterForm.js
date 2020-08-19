@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ProblemFilterForm from './ProblemFilterForm'
 import ProblemTable from './ProblemTable'
 import { PROBLEM_TAGS } from '../constants/problemTags'
+import { filterProblems } from '../features/filterProblems'
 
 /*
 Expected props:
@@ -10,7 +11,10 @@ Expected props:
 * attemptedProblems
 * solvedProblems
 */
-export default function ProblemTableWithFilterForm() {
+export default function ProblemTableWithFilterForm(props) {
+  const { allProblems, notAttemptedProblems, attemptedProblems, solvedProblems } = props
+
+  let [problems, setProblems] = useState([])
   let [problemDomain, setProblemDomain] = useState("ALL")
   let [minRating, setMinRating] = useState(0)
   let [maxRating, setMaxRating] = useState(9999)
@@ -23,6 +27,10 @@ export default function ProblemTableWithFilterForm() {
   const onMaxRatingChange = (value) => setMaxRating(value)
   const onMinContestIDChange = (value) => setMinContestID(value)
   const onMaxContestIDChange = (value) => setMaxContestID(value)
+
+  useEffect(() => {
+    setProblems(allProblems)
+  }, [allProblems, notAttemptedProblems, attemptedProblems, solvedProblems])
 
   const onTagsModeToggle = () => {
     setTagsMode(tagsMode === "OR" ? "AND" : "OR")
@@ -44,7 +52,7 @@ export default function ProblemTableWithFilterForm() {
   }
 
   const onApplyFilter = () => {
-    const filter = {
+    const filterParameters = {
       rating: {
         minimum: minRating,
         maximum: maxRating
@@ -56,34 +64,52 @@ export default function ProblemTableWithFilterForm() {
       tags: {
         mode: tagsMode,
         tags: PROBLEM_TAGS.filter(tag => tagsState[tag])
-      },
-      problemDoman: problemDomain
+      }
     }
 
-    console.log(filter)
+    switch (problemDomain) {
+      case 'ALL':
+        setProblems(filterProblems(allProblems, filterParameters))
+        break
+      case 'NOT_ATTEMPTED':
+        setProblems(filterProblems(notAttemptedProblems, filterParameters))
+        break
+      case 'ATTEMPTED':
+        setProblems(filterProblems(attemptedProblems, filterParameters))
+        break
+      case 'SOLVED':
+        setProblems(filterProblems(solvedProblems, filterParameters))
+        break
+    }
   }
 
   return (
     <div className="flex">
-      <ProblemFilterForm
-        problemDomain={problemDomain}
-        minRating={minRating}
-        maxRating={maxRating}
-        minContestID={minContestID}
-        maxContestID={maxContestID}
-        tagsMode={tagsMode}
-        tagsState={tagsState}
+      <div className="w-1/2">
+        <ProblemTable rows={problems} />
+      </div>
 
-        onProblemDomainChange={onProblemDomainChange}
-        onMinRatingChange={onMinRatingChange}
-        onMaxRatingChange={onMaxRatingChange}
-        onMinContestIDChange={onMinContestIDChange}
-        onMaxContestIDChange={onMaxContestIDChange}
-        onTagsModeToggle={onTagsModeToggle}
-        onTagsClear={onTagsClear}
-        onTagToggle={onTagToggle}
-        onApplyFilter={onApplyFilter}
-      />
+      <div className="w-1/2">
+        <ProblemFilterForm
+          problemDomain={problemDomain}
+          minRating={minRating}
+          maxRating={maxRating}
+          minContestID={minContestID}
+          maxContestID={maxContestID}
+          tagsMode={tagsMode}
+          tagsState={tagsState}
+
+          onProblemDomainChange={onProblemDomainChange}
+          onMinRatingChange={onMinRatingChange}
+          onMaxRatingChange={onMaxRatingChange}
+          onMinContestIDChange={onMinContestIDChange}
+          onMaxContestIDChange={onMaxContestIDChange}
+          onTagsModeToggle={onTagsModeToggle}
+          onTagsClear={onTagsClear}
+          onTagToggle={onTagToggle}
+          onApplyFilter={onApplyFilter}
+        />
+      </div>
     </div>
   )
 }

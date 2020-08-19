@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../api/codeforces'
-import ProblemTable from './ProblemTable'
+import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [allProblems, setAllProblems] = useState([])
+  const [notAttemptedProblems, setNotAttemptedProblems] = useState([])
+  const [attemptedProblems, setAttemptedProblems] = useState([])
+  const [solvedProblems, setSolvedProblems] = useState([])
 
   useEffect(() => {
     const getAllProblems = async () => {
@@ -16,6 +19,7 @@ export default function ProblemsPage() {
 
       setIsLoading(false)
       setAllProblems(problems)
+      setNotAttemptedProblems(problems)
     }
 
     getAllProblems()
@@ -39,7 +43,12 @@ export default function ProblemsPage() {
       {
         isLoading ?
         <CircularProgress /> :
-        <ProblemTable rows={allProblems}/>
+        <ProblemTableWithFilterForm
+          allProblems={allProblems}
+          notAttemptedProblems={notAttemptedProblems}
+          attemptedProblems={attemptedProblems}
+          solvedProblems={solvedProblems}
+        />
       }
     </div>
   )

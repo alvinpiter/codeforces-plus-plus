@@ -15,8 +15,6 @@ export default function ProblemFilterForm(props) {
   const { onTagsModeToggle, onTagsClear, onTagToggle } = props
   const { onApplyFilter } = props
 
-  console.log(props)
-
   const tagsComponent = Object.keys(tagsState).map((tag, index) =>
     <button
       key={index}
