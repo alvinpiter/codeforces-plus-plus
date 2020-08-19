@@ -124,6 +124,13 @@ export default function ProblemTable({rows}) {
               <TableCell style={{ width: 160 }} align="right">
                 {row.rating}
               </TableCell>
+              <TableCell>
+                <div className="space-x-1 leading-6">
+                  {
+                    row.tags.map(tag => <span key={tag} className="bg-gray-300 rounded-full p-1 text-xs"> {tag} </span>)
+                  }
+                </div>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -131,7 +138,7 @@ export default function ProblemTable({rows}) {
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-              colSpan={3}
+              colSpan={4}
               count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}
