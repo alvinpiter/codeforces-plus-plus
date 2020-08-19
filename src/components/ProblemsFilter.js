@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
 
 const tags = [
   "constructive algorithms",
@@ -55,8 +59,13 @@ function getInitialTagsState() {
 }
 
 export default function ProblemsFilter() {
+  let [minRating, setMinRating] = useState(0)
+  let [maxRating, setMaxRating] = useState(9999)
+  let [minContestID, setMinContestID] = useState(0)
+  let [maxContestID, setMaxContestID] = useState(9999)
   let [tagsMode, setTagsMode] = useState("AND")
   let [tagsState, setTagsState] = useState(getInitialTagsState())
+  let [problemDomain, setProblemDomain] = useState("ALL")
 
   const onTagModeToggle = () => {
     setTagsMode(tagsMode === "OR" ? "AND" : "OR")
@@ -73,28 +82,76 @@ export default function ProblemsFilter() {
     setTagsState(getInitialTagsState())
   }
 
-  const tagsComponent = tags.map(tag =>
+  const onProblemDomainChange = (event) => {
+    setProblemDomain(event.target.value)
+  }
+
+  const tagsComponent = tags.map((tag, index) =>
     <button
-      class={tagsState[tag] ? selectedTagStyle : regularTagStyle}
+      key={index}
+      className={tagsState[tag] ? selectedTagStyle : regularTagStyle}
       onClick={() => onTagToggle(tag)}
     > {tag} </button>
   )
 
   return (
     <div>
-      <div class="flex justify-center">
-        <FormControlLabel
-          control={<Switch checked={tagsMode === "AND"} onChange={onTagModeToggle} />}
-          label={
-            tagsMode === "OR" ?
-            "Problem must have at least 1 selected tag(s)" :
-            "Problem must have all selected tag(s)"
-          }
+      <div className="flex justify-center space-x-2 p-2 border-b-2">
+        <TextField
+          label="Minimum rating"
+          value={minRating}
+          onChange={event => setMinRating(event.target.value)}
         />
-        <Button variant="contained" color="secondary" onClick={onTagClear}> Clear tags </Button>
+
+        <TextField
+          label="Maximum rating"
+          value={maxRating}
+          onChange={event => setMaxRating(event.target.value)}
+        />
       </div>
-      <div class="flex flex-wrap">
-        {tagsComponent}
+
+      <div className="flex justify-center space-x-2 p-2 border-b-2">
+        <TextField
+          label="Minimum contest ID"
+          value={minContestID}
+          onChange={event => setMinContestID(event.target.value)}
+        />
+
+        <TextField
+          label="Maximum contest ID"
+          value={maxContestID}
+          onChange={event => setMaxContestID(event.target.value)}
+        />
+      </div>
+
+      <div className="p-2 border-b-2">
+        <div className="flex justify-center p-2">
+          <FormControlLabel
+            control={<Switch checked={tagsMode === "AND"} onChange={onTagModeToggle} />}
+            label={
+              tagsMode === "OR" ?
+              "Problem must have at least 1 selected tag(s)" :
+              "Problem must have all selected tag(s)"
+            }
+          />
+          <Button variant="contained" color="secondary" onClick={onTagClear}> Clear tags </Button>
+        </div>
+        <div className="flex flex-wrap">
+          {tagsComponent}
+        </div>
+      </div>
+
+      <div className="p-2 border-b-2 flex justify-center">
+        <RadioGroup row value={problemDomain} onChange={onProblemDomainChange}>
+          <FormControlLabel value="ALL" control={<Radio />} label="All"  />
+          <FormControlLabel value="NOT_ATTEMPTED" control={<Radio />} label="Not attempted" />
+          <FormControlLabel value="ATTEMPTED" control={<Radio />} label="Attempted" />
+          <FormControlLabel value="SOLVED" control={<Radio />} label="Solved" />
+        </RadioGroup>
+      </div>
+
+      <div className="p-2 flex justify-center">
+        <Button variant="contained" color="primary"> Apply filter </Button>
       </div>
     </div>
   )
