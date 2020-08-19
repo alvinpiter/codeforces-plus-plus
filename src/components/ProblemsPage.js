@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../api/codeforces'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
+import { getUserProblems } from '../features/userProblems'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
@@ -25,6 +26,21 @@ export default function ProblemsPage() {
     getAllProblems()
   }, [])
 
+  const onHandleSubmit = () => {
+    const getProblems = async (handle) => {
+      setIsLoading(true)
+
+      let userProblems = await getUserProblems(handle)
+
+      setIsLoading(false)
+      setNotAttemptedProblems(userProblems.notAttemptedProblems)
+      setAttemptedProblems(userProblems.attemptedProblems)
+      setSolvedProblems(userProblems.solvedProblems)
+    }
+
+    getProblems(handle)
+  }
+
   return (
     <div>
       <FormGroup row={true}>
@@ -37,6 +53,7 @@ export default function ProblemsPage() {
         <Button
           variant="contained"
           color="primary"
+          onClick={onHandleSubmit}
         > Submit </Button>
       </FormGroup>
 
