@@ -116,16 +116,16 @@ export default function ProblemTable({rows}) {
             : rows
           ).map((row) => (
             <TableRow key={row.id}>
-              <TableCell style={{ width: 20 }}>
+              <TableCell size="small">
                 <Link href={row.url} underline="always">{row.id}</Link>
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell size="small">
                 <Link href={row.url} underline="always">{row.name}</Link>
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell size="small">
                 {row.rating}
               </TableCell>
-              <TableCell>
+              <TableCell size="small">
                 <div className="space-x-1 leading-6">
                   {
                     row.tags.map(tag => <span key={tag} className="bg-gray-300 rounded-full p-1 text-xs"> {tag} </span>)
