@@ -1,11 +1,11 @@
 import React from 'react';
 import ProblemsPage from './components/ProblemsPage'
-import ProblemsFilter from './components/ProblemsFilter'
+import ProblemFilterForm from './components/ProblemFilterForm'
 
 function App() {
   return (
     <div>
-      <ProblemsFilter />
+      <ProblemFilterForm />
     </div>
   );
 }

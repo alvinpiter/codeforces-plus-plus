@@ -58,7 +58,7 @@ function getInitialTagsState() {
   return state
 }
 
-export default function ProblemsFilter() {
+export default function ProblemFilterForm() {
   let [minRating, setMinRating] = useState(0)
   let [maxRating, setMaxRating] = useState(9999)
   let [minContestID, setMinContestID] = useState(0)
@@ -84,6 +84,26 @@ export default function ProblemsFilter() {
 
   const onProblemDomainChange = (event) => {
     setProblemDomain(event.target.value)
+  }
+
+  const onApplyFilter = () => {
+    const filter = {
+      rating: {
+        minimum: minRating,
+        maximum: maxRating
+      },
+      contestID: {
+        minimum: minRating,
+        maximum: maxRating
+      },
+      tags: {
+        mode: tagsMode,
+        tags: tags.filter(tag => tagsState[tag])
+      },
+      problemDoman: problemDomain
+    }
+
+    console.log(filter)
   }
 
   const tagsComponent = tags.map((tag, index) =>
@@ -151,7 +171,7 @@ export default function ProblemsFilter() {
       </div>
 
       <div className="p-2 flex justify-center">
-        <Button variant="contained" color="primary"> Apply filter </Button>
+        <Button variant="contained" color="primary" onClick={onApplyFilter}> Apply filter </Button>
       </div>
     </div>
   )
