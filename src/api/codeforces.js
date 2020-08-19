@@ -8,7 +8,8 @@ function problemMapper(problem) {
     contestID: problem.contestId,
     name: problem.name,
     rating: problem.rating,
-    tags: problem.tags
+    tags: problem.tags,
+    url: `https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`
   }
 }
 

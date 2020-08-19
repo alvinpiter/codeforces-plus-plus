@@ -14,6 +14,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import Link from '@material-ui/core/Link';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -116,10 +117,10 @@ export default function ProblemTable({rows}) {
           ).map((row) => (
             <TableRow key={row.id}>
               <TableCell style={{ width: 20 }}>
-                {row.id}
+                <Link href={row.url} underline="always">{row.id}</Link>
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
-                {row.name}
+                <Link href={row.url} underline="always">{row.name}</Link>
               </TableCell>
               <TableCell style={{ width: 160 }} align="right">
                 {row.rating}
