@@ -90,10 +90,10 @@ const useStyles2 = makeStyles({
   },
 });
 
-export default function ProblemsTable({rows}) {
+export default function ProblemTable({rows}) {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(50);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -114,7 +114,7 @@ export default function ProblemsTable({rows}) {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.name}>
+            <TableRow key={row.id}>
               <TableCell style={{ width: 20 }}>
                 {row.id}
               </TableCell>
@@ -126,17 +126,11 @@ export default function ProblemsTable({rows}) {
               </TableCell>
             </TableRow>
           ))}
-
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[50, 100, 250, { label: 'All', value: -1 }]}
+              rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
               colSpan={3}
               count={rows.length}
               rowsPerPage={rowsPerPage}
