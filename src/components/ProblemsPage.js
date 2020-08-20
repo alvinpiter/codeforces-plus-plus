@@ -36,25 +36,37 @@ export default function ProblemsPage() {
     getProblems(handle)
   }
 
-  const mapIDsToProblems = (ids, problemsMap) => {
-    return ids.map(({id, submittedID}) => {
-      let problem = problemsMap.get(id)
-      return { ... problem, submittedID }
-    })
-  }
-
-  let allProblemsMap = new Map()
-  for (let problem of allProblems)
-    allProblemsMap.set(problem.id, problem)
-
-  let notAttemptedProblems = allProblems.slice()
-  let attemptedProblems = []
-  let solvedProblems = []
+  const attemptedProblemsMap = new Map()
+  const solvedProblemsMap = new Map()
 
   if (userProblemIDs !== null) {
-    notAttemptedProblems = mapIDsToProblems(userProblemIDs.notAttemptedProblemIDs, allProblemsMap)
-    attemptedProblems = mapIDsToProblems(userProblemIDs.attemptedProblemIDs, allProblemsMap)
-    solvedProblems = mapIDsToProblems(userProblemIDs.solvedProblemIDs, allProblemsMap)
+    for (let { id, submittedID } of userProblemIDs.attemptedProblemIDs)
+      attemptedProblemsMap.set(id, submittedID)
+
+    for (let { id, submittedID } of userProblemIDs.solvedProblemIDs)
+      solvedProblemsMap.set(id, submittedID)
+  }
+
+  let enhancedProblems = []
+  for (let problem of allProblems) {
+    let submittedID, state
+
+    if (attemptedProblemsMap.has(problem.id)) {
+      submittedID = attemptedProblemsMap.get(problem.id)
+      state = -1
+    } else if (solvedProblemsMap.has(problem.id)) {
+      submittedID = solvedProblemsMap.get(problem.id)
+      state = 1
+    } else {
+      submittedID = null
+      state = 0
+    }
+
+    enhancedProblems.push({
+      ...problem,
+      submittedID: submittedID,
+      state: state
+    })
   }
 
   return (
@@ -77,10 +89,7 @@ export default function ProblemsPage() {
         isLoading ?
         <CircularProgress /> :
         <ProblemTableWithFilterForm
-          allProblems={allProblems}
-          notAttemptedProblems={notAttemptedProblems}
-          attemptedProblems={attemptedProblems}
-          solvedProblems={solvedProblems}
+          problems={enhancedProblems}
         />
       }
     </div>
