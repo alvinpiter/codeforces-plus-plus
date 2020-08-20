@@ -23,8 +23,6 @@ All ids in solvedProblemIDs and attemptedProblemIDs must be unique.
 Prioritize object whose id and submittedID is the same
 */
 export function filterNormalizedSubmissions(submissions) {
-  console.log(submissions)
-
   let solvedIDsMap = new Map() //map id to submittedID
   for (let sub of submissions) {
     if (sub.verdict === "OK") {

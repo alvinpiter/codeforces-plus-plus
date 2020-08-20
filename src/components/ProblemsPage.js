@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
-import { problemsetProblems } from '../api/codeforces'
+import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
-import { getUserProblems } from '../features/userProblems'
+import { getUserProblemIDs } from '../features/getUserProblemIDs'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [allProblems, setAllProblems] = useState([])
-  const [notAttemptedProblems, setNotAttemptedProblems] = useState([])
-  const [attemptedProblems, setAttemptedProblems] = useState([])
-  const [solvedProblems, setSolvedProblems] = useState([])
+  const [userProblemIDs, setUserProblemIDs] = useState(null)
 
   useEffect(() => {
     const getAllProblems = async () => {
       setIsLoading(true)
 
-      let problems = await problemsetProblems()
+      let problems = await getProblemsetProblems()
 
       setIsLoading(false)
       setAllProblems(problems)
-      setNotAttemptedProblems(problems)
     }
 
     getAllProblems()
@@ -30,15 +27,34 @@ export default function ProblemsPage() {
     const getProblems = async (handle) => {
       setIsLoading(true)
 
-      let userProblems = await getUserProblems(handle)
+      let userProblemIDs = await getUserProblemIDs(handle, allProblems)
 
       setIsLoading(false)
-      setNotAttemptedProblems(userProblems.notAttemptedProblems)
-      setAttemptedProblems(userProblems.attemptedProblems)
-      setSolvedProblems(userProblems.solvedProblems)
+      setUserProblemIDs(userProblemIDs)
     }
 
     getProblems(handle)
+  }
+
+  const mapIDsToProblems = (ids, problemsMap) => {
+    return ids.map(({id, submittedID}) => {
+      let problem = problemsMap.get(id)
+      return { ... problem, submittedID }
+    })
+  }
+
+  let allProblemsMap = new Map()
+  for (let problem of allProblems)
+    allProblemsMap.set(problem.id, problem)
+
+  let notAttemptedProblems = allProblems.slice()
+  let attemptedProblems = []
+  let solvedProblems = []
+
+  if (userProblemIDs !== null) {
+    notAttemptedProblems = mapIDsToProblems(userProblemIDs.notAttemptedProblemIDs, allProblemsMap)
+    attemptedProblems = mapIDsToProblems(userProblemIDs.attemptedProblemIDs, allProblemsMap)
+    solvedProblems = mapIDsToProblems(userProblemIDs.solvedProblemIDs, allProblemsMap)
   }
 
   return (
