@@ -101,8 +101,6 @@ export default function ProblemTable({rows}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
   const handleHideProblemTags = (event) => {
     setHideProblemTags(!hideProblemTags)
   }
@@ -161,6 +159,9 @@ export default function ProblemTable({rows}) {
                   </TableCell>
                   <TableCell size="small">
                     {row.rating}
+                  </TableCell>
+                  <TableCell>
+                    {row.solvedCount}
                   </TableCell>
                   {
                     !hideProblemTags &&
