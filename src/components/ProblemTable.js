@@ -160,7 +160,7 @@ export default function ProblemTable({rows}) {
                   <TableCell size="small">
                     {row.rating}
                   </TableCell>
-                  <TableCell>
+                  <TableCell size="small">
                     {row.solvedCount}
                   </TableCell>
                   {
@@ -180,7 +180,7 @@ export default function ProblemTable({rows}) {
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-                  colSpan={4}
+                  colSpan={5}
                   count={rows.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
