@@ -121,6 +121,14 @@ export default function ProblemTable({rows}) {
       </div>
     )
   } else {
+    const getRowBackgroundColor = (state) => {
+      if (state === -1)
+        return "bg-red-300"
+      else if (state === 1)
+        return "bg-green-300"
+      else return ""
+    }
+
     return (
       <div>
         <div className="flex justify-end">
@@ -136,7 +144,7 @@ export default function ProblemTable({rows}) {
                 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : rows
               ).map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className={getRowBackgroundColor(row.state)}>
                   <TableCell size="small">
                     <Link href={row.url} underline="always">{row.id}</Link>
                   </TableCell>
