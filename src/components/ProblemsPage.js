@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
-import { getProblemsetProblems } from '../api/codeforces'
+import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
-import { getUserProblems } from '../features/userProblems'
+import { getUserProblemIDs } from '../features/getUserProblemIDs'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [allProblems, setAllProblems] = useState([])
-  const [notAttemptedProblems, setNotAttemptedProblems] = useState([])
-  const [attemptedProblems, setAttemptedProblems] = useState([])
-  const [solvedProblems, setSolvedProblems] = useState([])
+  const [userProblemIDs, setUserProblemIDs] = useState(null)
 
   useEffect(() => {
     const getAllProblems = async () => {
@@ -20,7 +18,6 @@ export default function ProblemsPage() {
 
       setIsLoading(false)
       setAllProblems(problems)
-      setNotAttemptedProblems(problems)
     }
 
     getAllProblems()
@@ -30,15 +27,46 @@ export default function ProblemsPage() {
     const getProblems = async (handle) => {
       setIsLoading(true)
 
-      let userProblems = await getUserProblems(handle)
+      let userProblemIDs = await getUserProblemIDs(handle, allProblems)
 
       setIsLoading(false)
-      setNotAttemptedProblems(userProblems.notAttemptedProblems)
-      setAttemptedProblems(userProblems.attemptedProblems)
-      setSolvedProblems(userProblems.solvedProblems)
+      setUserProblemIDs(userProblemIDs)
     }
 
     getProblems(handle)
+  }
+
+  const attemptedProblemsMap = new Map()
+  const solvedProblemsMap = new Map()
+
+  if (userProblemIDs !== null) {
+    for (let { id, submittedID } of userProblemIDs.attemptedProblemIDs)
+      attemptedProblemsMap.set(id, submittedID)
+
+    for (let { id, submittedID } of userProblemIDs.solvedProblemIDs)
+      solvedProblemsMap.set(id, submittedID)
+  }
+
+  let enhancedProblems = []
+  for (let problem of allProblems) {
+    let submittedID, state
+
+    if (attemptedProblemsMap.has(problem.id)) {
+      submittedID = attemptedProblemsMap.get(problem.id)
+      state = -1
+    } else if (solvedProblemsMap.has(problem.id)) {
+      submittedID = solvedProblemsMap.get(problem.id)
+      state = 1
+    } else {
+      submittedID = null
+      state = 0
+    }
+
+    enhancedProblems.push({
+      ...problem,
+      submittedID: submittedID,
+      state: state
+    })
   }
 
   return (
@@ -61,10 +89,7 @@ export default function ProblemsPage() {
         isLoading ?
         <CircularProgress /> :
         <ProblemTableWithFilterForm
-          allProblems={allProblems}
-          notAttemptedProblems={notAttemptedProblems}
-          attemptedProblems={attemptedProblems}
-          solvedProblems={solvedProblems}
+          problems={enhancedProblems}
         />
       }
     </div>

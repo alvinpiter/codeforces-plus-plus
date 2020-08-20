@@ -6,15 +6,12 @@ import { filterProblems } from '../features/filterProblems'
 
 /*
 Expected props:
-* allProblems
-* notAttemptedProblems
-* attemptedProblems
-* solvedProblems
+* problems (array of Problem with submittedID and state). There are three possible state: -1 (attempted), 0 (not attempted), 1 (solved)
 */
 export default function ProblemTableWithFilterForm(props) {
-  const { allProblems, notAttemptedProblems, attemptedProblems, solvedProblems } = props
+  const { problems } = props
 
-  let [problems, setProblems] = useState([])
+  let [filteredProblems, setFilteredProblems] = useState([])
   let [problemDomain, setProblemDomain] = useState("ALL")
   let [minRating, setMinRating] = useState(0)
   let [maxRating, setMaxRating] = useState(9999)
@@ -29,8 +26,8 @@ export default function ProblemTableWithFilterForm(props) {
   const onMaxContestIDChange = (value) => setMaxContestID(value)
 
   useEffect(() => {
-    setProblems(allProblems)
-  }, [allProblems, notAttemptedProblems, attemptedProblems, solvedProblems])
+    setFilteredProblems(problems)
+  }, [problems])
 
   const onTagsModeToggle = () => {
     setTagsMode(tagsMode === "OR" ? "AND" : "OR")
@@ -67,26 +64,28 @@ export default function ProblemTableWithFilterForm(props) {
       }
     }
 
+    let tempProblems
     switch (problemDomain) {
       case 'ALL':
-        setProblems(filterProblems(allProblems, filterParameters))
+        tempProblems = problems.slice()
         break
       case 'NOT_ATTEMPTED':
-        setProblems(filterProblems(notAttemptedProblems, filterParameters))
+        tempProblems = problems.filter(p => p.state === 0)
         break
       case 'ATTEMPTED':
-        setProblems(filterProblems(attemptedProblems, filterParameters))
+        tempProblems = problems.filter(p => p.state === -1)
         break
-      case 'SOLVED':
-        setProblems(filterProblems(solvedProblems, filterParameters))
-        break
+      default:
+        tempProblems = problems.filter(p => p.state === 1)
     }
+
+    setFilteredProblems(filterProblems(tempProblems, filterParameters))
   }
 
   return (
     <div className="flex">
       <div className="w-1/2">
-        <ProblemTable rows={problems} />
+        <ProblemTable rows={filteredProblems} />
       </div>
 
       <div className="w-1/2">

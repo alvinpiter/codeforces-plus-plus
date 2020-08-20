@@ -17,6 +17,8 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import Link from '@material-ui/core/Link';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Tooltip from '@material-ui/core/Tooltip'
+import InfoIcon from '@material-ui/icons/Info'
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -99,8 +101,6 @@ export default function ProblemTable({rows}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
   const handleHideProblemTags = (event) => {
     setHideProblemTags(!hideProblemTags)
   }
@@ -121,6 +121,14 @@ export default function ProblemTable({rows}) {
       </div>
     )
   } else {
+    const getRowBackgroundColor = (state) => {
+      if (state === -1)
+        return "bg-red-300"
+      else if (state === 1)
+        return "bg-green-300"
+      else return ""
+    }
+
     return (
       <div>
         <div className="flex justify-end">
@@ -136,15 +144,24 @@ export default function ProblemTable({rows}) {
                 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : rows
               ).map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className={getRowBackgroundColor(row.state)}>
                   <TableCell size="small">
                     <Link href={row.url} underline="always">{row.id}</Link>
+                    {
+                      row.state !== 0 && row.submittedID !== row.id &&
+                      <Tooltip title={`Submitted through ${row.submittedID}`}>
+                        <InfoIcon />
+                      </Tooltip>
+                    }
                   </TableCell>
                   <TableCell size="small">
                     <Link href={row.url} underline="always">{row.name}</Link>
                   </TableCell>
                   <TableCell size="small">
                     {row.rating}
+                  </TableCell>
+                  <TableCell size="small">
+                    {row.solvedCount}
                   </TableCell>
                   {
                     !hideProblemTags &&
@@ -163,7 +180,7 @@ export default function ProblemTable({rows}) {
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-                  colSpan={4}
+                  colSpan={5}
                   count={rows.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
