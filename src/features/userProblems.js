@@ -1,9 +1,9 @@
 import { filterSubmissions } from './filterSubmissions'
 import { filterProblems } from './filterProblems'
-import { getProblemsetProblems, getUserSubmissions } from '../api/codeforces'
+import { problemsetProblems, getUserSubmissions } from '../api/codeforces'
 
 export async function getUserProblems(handle) {
-  const allProblems = await getProblemsetProblems()
+  const allProblems = await problemsetProblems()
   const submissions = await getUserSubmissions(handle)
   const attemptedAndSolvedProblems = filterSubmissions(submissions)
 

@@ -1,10 +1,12 @@
 import React from 'react'
-import ProblemsPage from './components/ProblemsPage'
+import { getProblemsetProblems } from './features/getProblemsetProblems'
 
 function App() {
+  let problemsPromise = getProblemsetProblems()
+  problemsPromise.then(problems => console.log(problems)).catch(e => console.log(e))
+
   return (
     <div>
-      <ProblemsPage />
     </div>
   );
 }

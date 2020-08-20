@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
-import { getProblemsetProblems } from '../api/codeforces'
+import { problemsetProblems } from '../api/codeforces'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
 import { getUserProblems } from '../features/userProblems'
 
@@ -16,7 +16,7 @@ export default function ProblemsPage() {
     const getAllProblems = async () => {
       setIsLoading(true)
 
-      let problems = await getProblemsetProblems()
+      let problems = await problemsetProblems()
 
       setIsLoading(false)
       setAllProblems(problems)
