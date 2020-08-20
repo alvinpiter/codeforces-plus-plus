@@ -17,6 +17,8 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import Link from '@material-ui/core/Link';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Tooltip from '@material-ui/core/Tooltip'
+import InfoIcon from '@material-ui/icons/Info'
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -147,6 +149,12 @@ export default function ProblemTable({rows}) {
                 <TableRow key={row.id} className={getRowBackgroundColor(row.state)}>
                   <TableCell size="small">
                     <Link href={row.url} underline="always">{row.id}</Link>
+                    {
+                      row.state !== 0 && row.submittedID !== row.id &&
+                      <Tooltip title={`Submitted through ${row.submittedID}`}>
+                        <InfoIcon />
+                      </Tooltip>
+                    }
                   </TableCell>
                   <TableCell size="small">
                     <Link href={row.url} underline="always">{row.name}</Link>
