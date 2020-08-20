@@ -25,6 +25,15 @@ export default function ProblemFilterForm(props) {
 
   return (
     <div>
+      <div className="p-2 border-b-2 flex justify-center">
+        <RadioGroup row value={problemDomain} onChange={onProblemDomainChange}>
+          <FormControlLabel value="ALL" control={<Radio />} label="All"  />
+          <FormControlLabel value="NOT_ATTEMPTED" control={<Radio />} label="Not attempted" />
+          <FormControlLabel value="ATTEMPTED" control={<Radio />} label="Attempted" />
+          <FormControlLabel value="SOLVED" control={<Radio />} label="Solved" />
+        </RadioGroup>
+      </div>
+
       <div className="flex justify-center space-x-2 p-2 border-b-2">
         <TextField
           label="Minimum rating"
@@ -68,15 +77,6 @@ export default function ProblemFilterForm(props) {
         <div className="flex flex-wrap">
           {tagsComponent}
         </div>
-      </div>
-
-      <div className="p-2 border-b-2 flex justify-center">
-        <RadioGroup row value={problemDomain} onChange={onProblemDomainChange}>
-          <FormControlLabel value="ALL" control={<Radio />} label="All"  />
-          <FormControlLabel value="NOT_ATTEMPTED" control={<Radio />} label="Not attempted" />
-          <FormControlLabel value="ATTEMPTED" control={<Radio />} label="Attempted" />
-          <FormControlLabel value="SOLVED" control={<Radio />} label="Solved" />
-        </RadioGroup>
       </div>
 
       <div className="p-2 flex justify-center">

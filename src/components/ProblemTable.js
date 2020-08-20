@@ -14,6 +14,9 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import Link from '@material-ui/core/Link';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -92,10 +95,15 @@ const useStyles2 = makeStyles({
 
 export default function ProblemTable({rows}) {
   const classes = useStyles2();
+  const [hideProblemTags, setHideProblemTags] = React.useState(false)
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  const handleHideProblemTags = (event) => {
+    setHideProblemTags(!hideProblemTags)
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -106,46 +114,72 @@ export default function ProblemTable({rows}) {
     setPage(0);
   };
 
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="custom pagination table">
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.id}>
-              <TableCell style={{ width: 20 }}>
-                {row.id}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.name}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.rating}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-  );
+  if (rows.length === 0) {
+    return (
+      <div className="bg-yellow-300 p-2 rounded-md text-center">
+        Empty data
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <div className="flex justify-end">
+          <FormControlLabel
+            control={<Checkbox checked={hideProblemTags} onChange={handleHideProblemTags} />}
+            label="Hide problem tags"
+          />
+        </div>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="custom pagination table">
+            <TableBody>
+              {(rowsPerPage > 0
+                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : rows
+              ).map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell size="small">
+                    <Link href={row.url} underline="always">{row.id}</Link>
+                  </TableCell>
+                  <TableCell size="small">
+                    <Link href={row.url} underline="always">{row.name}</Link>
+                  </TableCell>
+                  <TableCell size="small">
+                    {row.rating}
+                  </TableCell>
+                  {
+                    !hideProblemTags &&
+                    <TableCell size="small">
+                      <div className="space-x-1 leading-6">
+                        {
+                          row.tags.map(tag => <span key={tag} className="bg-gray-300 rounded-full p-1 text-xs"> {tag} </span>)
+                        }
+                      </div>
+                    </TableCell>
+                  }
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
+                  colSpan={4}
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: { 'aria-label': 'rows per page' },
+                    native: true,
+                  }}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </div>
+    )
+  }
 }
