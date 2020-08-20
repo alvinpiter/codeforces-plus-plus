@@ -11,8 +11,8 @@ export async function getNormalizedSubmissions(handle, problems) {
   for (let submission of submissions) {
     const contestID = submission.problem.contestId
 
-    //skip gym submissions for now
-    if (contestID >= 100000)
+    //skip gym or non-programming submissions for now
+    if (contestID >= 100000 || submission.problem.type !== "PROGRAMMING")
       continue
 
     let lo = 0, hi = numProblems - 1, mid
@@ -27,7 +27,7 @@ export async function getNormalizedSubmissions(handle, problems) {
     //check starting from lo
     let found = false
     for (let idx = lo; idx < Math.min(numProblems, idx + 20); idx++) {
-      if (problems[idx].name === submission.problem.name && problems[idx].rating === submission.problem.rating) {
+      if (problems[idx].name === submission.problem.name) {
         found = true
 
         const normalizedSubmission = {
