@@ -2,6 +2,7 @@ import React from 'react'
 import TableContainer from '@material-ui/core/TableContainer'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
+import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Paper from '@material-ui/core/Paper'
@@ -10,6 +11,8 @@ import Link from '@material-ui/core/Link'
 
 export default function StandingTable(props) {
   const { standings } = props
+
+  console.log(standings)
 
   if (standings === undefined) {
     return (
@@ -23,6 +26,7 @@ export default function StandingTable(props) {
     <TableContainer component={Paper}>
       <Table>
         <StandingTableHeader problems={standings.problems} />
+        <StandingTableBody rows={standings.rows} />
       </Table>
     </TableContainer>
   )
@@ -48,6 +52,27 @@ function StandingTableHeader(props) {
   )
 }
 
+function StandingTableBody(props) {
+  const { rows } = props
+  return (
+    <TableBody>
+      {
+        rows.map(row =>
+          <TableRow key={row.party.members[0].handle}>
+            <TableCell> {row.rank} </TableCell>
+            <TableCell> {row.party.members[0].handle} </TableCell>
+            <TableCell> Dummy </TableCell>
+            <TableCell> Dummy </TableCell>
+            <TableCell>
+              <RatingChangeCell ratingChange={row.ratingChange} />
+            </TableCell>
+          </TableRow>
+        )
+      }
+    </TableBody>
+  )
+}
+
 function ProblemHeader(props) {
   const { problem } = props
   return (
@@ -57,4 +82,54 @@ function ProblemHeader(props) {
       </Tooltip>
     </TableCell>
   )
+}
+
+function RatingChangeCell(props) {
+  const { ratingChange } = props
+  const { oldRating, newRating } = ratingChange
+
+  return (
+    <p>
+      {getRatedSpan(oldRating, oldRating)} ({getRatingChangeSpan(newRating - oldRating)}) {getRatedSpan(newRating, newRating)}
+    </p>
+  )
+}
+
+function getRatedSpan(text, rating) {
+  if (rating < 3000)
+    return <span className={getRatingColor(rating)}>{text}</span>
+  else
+    return getRatedLgmSpan(text)
+}
+
+function getRatedLgmSpan(text) {
+  text = String(text)
+  return (
+    <span>{text[0]}<span className="text-red-500">{text.substring(1)}</span></span>
+  )
+}
+
+function getRatingChangeSpan(diff) {
+  return <span
+    className={diff >= 0 ? "text-green-500" : "text-red-500"}
+  >
+    {diff >= 0 ? "+" : ""}{diff}
+  </span>
+}
+
+function getRatingColor(rating) {
+  if (rating < 1200)
+    return "text-gray-500"
+  else if (rating < 1400)
+    return "text-green-500"
+  else if (rating < 1600)
+    return "text-teal-500"
+  else if (rating < 1900)
+    return "text-blue-500"
+  else if (rating < 2100)
+    return "text-purple-500"
+  else if (rating < 2400)
+    return "text-orange-500"
+  else if (rating < 3000)
+    return "text-red-500"
 }
