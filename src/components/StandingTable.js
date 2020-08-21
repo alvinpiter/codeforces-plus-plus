@@ -63,9 +63,15 @@ function StandingTableBody(props) {
             <TableCell> {row.party.members[0].handle} </TableCell>
             <TableCell> Dummy </TableCell>
             <TableCell> Dummy </TableCell>
+            <TableCell> Dummy </TableCell>
             <TableCell>
               <RatingChangeCell ratingChange={row.ratingChange} />
             </TableCell>
+            {
+              row.problemResults.map(result =>
+                <ProblemResultCell result={result} />
+              )
+            }
           </TableRow>
         )
       }
@@ -93,6 +99,34 @@ function RatingChangeCell(props) {
       {getRatedSpan(oldRating, oldRating)} ({getRatingChangeSpan(newRating - oldRating)}) {getRatedSpan(newRating, newRating)}
     </p>
   )
+}
+
+function ProblemResultCell(props) {
+  const { result } = props
+
+  if (result.hasOwnProperty('bestSubmissionTimeSeconds')) {
+    //Accepted
+    const {
+      bestSubmissionTimeSeconds,
+      rejectedAttemptCount
+    } = result
+
+    const rejectedAttemptCountText = (rejectedAttemptCount > 0 ? rejectedAttemptCount : "")
+
+    return (
+      <TableCell className="bg-green-200">
+        <div className="text-center">
+          <p>+{rejectedAttemptCountText}</p>
+          <p>{formatSeconds(bestSubmissionTimeSeconds)}</p>
+        </div>
+      </TableCell>
+    )
+  } else if (result.rejectedAttemptCount > 0) {
+    //Attempted
+    return null
+  } else {
+    return null
+  }
 }
 
 function getRatedSpan(text, rating) {
@@ -132,4 +166,18 @@ function getRatingColor(rating) {
     return "text-orange-500"
   else if (rating < 3000)
     return "text-red-500"
+}
+
+function formatSeconds(seconds) {
+  const hour = Math.floor(seconds/3600)
+  const minute = (Math.floor(seconds/60))%60
+
+  const zeroPadded = (number) => {
+    if (number < 10)
+      return `0${number}`
+    else
+      return number
+  }
+
+  return `${zeroPadded(hour)}:${zeroPadded(minute)}`
 }
