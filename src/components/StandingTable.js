@@ -61,7 +61,7 @@ function StandingTableBody(props) {
           <TableRow key={row.party.members[0].handle}>
             <TableCell> {row.rank} </TableCell>
             <TableCell> {row.party.members[0].handle} </TableCell>
-            <TableCell> Dummy </TableCell>
+            <TableCell> {row.acceptedProblemCount} </TableCell>
             <TableCell> Dummy </TableCell>
             <TableCell> Dummy </TableCell>
             <TableCell>

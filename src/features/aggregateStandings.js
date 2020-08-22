@@ -21,6 +21,14 @@ export async function aggregateStandings(contestID) {
     if (userInfoMap.has(handle))
       row.userInfo = userInfoMap.get(handle)
 
+    let acceptedProblemCount = 0
+    for (let result of row.problemResults) {
+      if (result.bestSubmissionTimeSeconds !== undefined)
+        acceptedProblemCount += 1
+    }
+
+    row.acceptedProblemCount = acceptedProblemCount
+
     rankListRows.push(row)
   }
 
