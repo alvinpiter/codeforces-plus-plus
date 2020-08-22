@@ -1,25 +1,50 @@
 import React, { useState, useEffect } from 'react'
-import StandingTable from './StandingTable'
-import { aggregateStandings } from '../features/aggregateStandings'
+import ContestPicker from './ContestPicker'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { getPastContestList } from '../features/getPastContestList'
+import { aggregateStandings } from '../features/aggregateStandings'
+import StandingTable from './StandingTable'
 
 export default function StandingsPage() {
-  let [isLoading, setIsLoading] = useState(true)
-  let [standings, setStandings] = useState()
+  let [isLoadingContests, setIsLoadingContests] = useState(true)
+  let [contests, setContests] = useState([])
+
+  let [isLoadingStandings, setIsLoadingStandings] = useState(false)
+  let [standings, setStandings] = useState(null)
+
+  const onPicked = (contest) => {
+    const loadStandings = async (contest) => {
+      setIsLoadingStandings(true)
+
+      const standings = await aggregateStandings(contest.id)
+
+      setIsLoadingStandings(false)
+      setStandings(standings)
+    }
+
+    loadStandings(contest)
+  }
 
   useEffect(() => {
-    let prom = aggregateStandings(1392)
-    // let prom = aggregateStandings(19)
-    prom.then(result => {
-      setIsLoading(false)
-      setStandings(result)
-    })
+    const loadContests = async () => {
+      const contests = await getPastContestList()
+
+      setIsLoadingContests(false)
+      setContests(contests)
+    }
+
+    loadContests()
   }, [])
 
   return (
     <div>
       {
-        isLoading ?
+        isLoadingContests ?
+        <CircularProgress /> :
+        <ContestPicker contests={contests} onPicked={onPicked}/>
+      }
+      {
+        isLoadingStandings ?
         <CircularProgress /> :
         <StandingTable standings={standings} />
       }

@@ -12,12 +12,8 @@ import Link from '@material-ui/core/Link'
 export default function StandingTable(props) {
   const { standings } = props
 
-  if (standings === undefined) {
-    return (
-      <div>
-        Loading...
-      </div>
-    )
+  if (standings === null) {
+    return null
   }
 
   return (
