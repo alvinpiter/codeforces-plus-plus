@@ -64,7 +64,12 @@ function StandingTableBody(props) {
             <TableCell> {row.party.members[0].handle} </TableCell>
             <TableCell> {row.acceptedProblemCount} </TableCell>
             <TableCell> {contestType === "ICPC" ? row.penalty : row.points} </TableCell>
-            <TableCell> Dummy </TableCell>
+            <TableCell>
+              <HacksCell
+                successfulCount={row.successfulHackCount}
+                unsuccessfulCount={row.unsuccessfulHackCount}
+              />
+            </TableCell>
             <TableCell>
               <RatingChangeCell ratingChange={row.ratingChange} />
             </TableCell>
@@ -129,6 +134,25 @@ function ProblemResultCell(props) {
       </TableCell>
     )
   }
+}
+
+function HacksCell(props) {
+  const {
+    successfulCount,
+    unsuccessfulCount
+  } = props
+
+  const successfulCountInfo = <span className="text-green-500">+{successfulCount}</span>
+  const unsuccessfulCountInfo = <span className="text-red-500">-{unsuccessfulCount}</span>
+
+  if (successfulCount === 0 && unsuccessfulCount === 0)
+    return null
+  else if (successfulCount > 0 && unsuccessfulCount > 0)
+    return <p>{successfulCountInfo}:{unsuccessfulCountInfo}</p>
+  else if (successfulCount > 0)
+    return <p>{successfulCountInfo}</p>
+  else
+    return <p>{unsuccessfulCountInfo}</p>
 }
 
 function getRatedSpan(text, rating) {
