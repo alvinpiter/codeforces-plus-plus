@@ -28,9 +28,6 @@ export function filterSubmissions(submissions) {
     }
   }
 
-  console.log(solvedProblems)
-  console.log(attemptedProblems)
-
   return {
     solvedProblems: solvedProblems,
     attemptedProblems: attemptedProblems

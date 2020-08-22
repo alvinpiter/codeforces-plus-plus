@@ -18,8 +18,20 @@ export async function aggregateStandings(contestID) {
     if (userRatingChangeMap.has(handle))
       row.ratingChange = userRatingChangeMap.get(handle)
 
-    if (userInfoMap.has(handle))
-      row.userInfo = userInfoMap.get(handle)
+    let userInfos = []
+    for (let member of row.party.members) {
+      userInfos.push(userInfoMap.get(member.handle))
+    }
+
+    row.userInfos = userInfos
+
+    let acceptedProblemCount = 0
+    for (let result of row.problemResults) {
+      if (result.bestSubmissionTimeSeconds !== undefined)
+        acceptedProblemCount += 1
+    }
+
+    row.acceptedProblemCount = acceptedProblemCount
 
     rankListRows.push(row)
   }
