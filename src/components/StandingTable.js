@@ -12,8 +12,6 @@ import Link from '@material-ui/core/Link'
 export default function StandingTable(props) {
   const { standings } = props
 
-  console.log(standings)
-
   if (standings === undefined) {
     return (
       <div>
@@ -61,24 +59,18 @@ function StandingTableBody(props) {
         rows.map(row =>
           <TableRow key={row.party.members[0].handle}>
             <TableCell> {row.rank} </TableCell>
-            <TableCell>
-              <PartyCell
-                party={row.party}
-                userInfos={row.userInfos}
-                ratingChange={row.ratingChange}
-              />
-            </TableCell>
+            <PartyCell
+              party={row.party}
+              userInfos={row.userInfos}
+              ratingChange={row.ratingChange}
+            />
             <TableCell> {row.acceptedProblemCount} </TableCell>
             <TableCell> {contestType === "ICPC" ? row.penalty : row.points} </TableCell>
-            <TableCell>
-              <HacksCell
-                successfulCount={row.successfulHackCount}
-                unsuccessfulCount={row.unsuccessfulHackCount}
-              />
-            </TableCell>
-            <TableCell>
-              <RatingChangeCell ratingChange={row.ratingChange} />
-            </TableCell>
+            <HacksCell
+              successfulCount={row.successfulHackCount}
+              unsuccessfulCount={row.unsuccessfulHackCount}
+            />
+            <RatingChangeCell ratingChange={row.ratingChange} />
             {
               row.problemResults.map(result =>
                 <ProblemResultCell contestType={contestType} result={result} />
@@ -117,7 +109,9 @@ function PartyCell(props) {
     const name = constructName(userInfos[0].firstName, userInfos[0].lastName)
     const rating = ratingChange.oldRating
     return (
-      <p>{getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
+      <TableCell>
+        <p>{getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
+      </TableCell>
     )
   }
 }
@@ -138,9 +132,11 @@ function RatingChangeCell(props) {
   const { oldRating, newRating } = ratingChange
 
   return (
-    <p>
-      {getRatedSpan(oldRating, oldRating)} ({getRatingChangeSpan(newRating - oldRating)}) {getRatedSpan(newRating, newRating)}
-    </p>
+    <TableCell>
+      <p>
+        {getRatedSpan(oldRating, oldRating)} ({getRatingChangeSpan(newRating - oldRating)}) {getRatedSpan(newRating, newRating)}
+      </p>
+    </TableCell>
   )
 }
 
@@ -182,14 +178,21 @@ function HacksCell(props) {
   const successfulCountInfo = <span className="text-green-500">+{successfulCount}</span>
   const unsuccessfulCountInfo = <span className="text-red-500">-{unsuccessfulCount}</span>
 
+  let cell
   if (successfulCount === 0 && unsuccessfulCount === 0)
-    return null
+    cell = null
   else if (successfulCount > 0 && unsuccessfulCount > 0)
-    return <p>{successfulCountInfo}:{unsuccessfulCountInfo}</p>
+    cell = <p>{successfulCountInfo}:{unsuccessfulCountInfo}</p>
   else if (successfulCount > 0)
-    return <p>{successfulCountInfo}</p>
+    cell = <p>{successfulCountInfo}</p>
   else
-    return <p>{unsuccessfulCountInfo}</p>
+    cell = <p>{unsuccessfulCountInfo}</p>
+
+  return (
+    <TableCell>
+      {cell}
+    </TableCell>
+  )
 }
 
 function getRatedSpan(text, rating) {
