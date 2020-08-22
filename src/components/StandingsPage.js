@@ -8,7 +8,8 @@ export default function StandingsPage() {
   let [standings, setStandings] = useState()
 
   useEffect(() => {
-    let prom = aggregateStandings(566)
+    let prom = aggregateStandings(700)
+    // let prom = aggregateStandings(19)
     prom.then(result => {
       setIsLoading(false)
       setStandings(result)

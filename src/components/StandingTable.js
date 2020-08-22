@@ -25,8 +25,8 @@ export default function StandingTable(props) {
   return (
     <TableContainer component={Paper}>
       <Table>
-        <StandingTableHeader problems={standings.problems} />
-        <StandingTableBody rows={standings.rows} />
+        <StandingTableHeader contestType={standings.contest.type} problems={standings.problems} />
+        <StandingTableBody contestType={standings.contest.type} rows={standings.rows} />
       </Table>
     </TableContainer>
   )
@@ -34,14 +34,15 @@ export default function StandingTable(props) {
 
 //#, Who, AC count, Penalty, Hacks, Rating change, problems
 function StandingTableHeader(props) {
-  const { problems } = props
+  const { problems, contestType } = props
+
   return (
     <TableHead>
       <TableRow>
         <TableCell> # </TableCell>
         <TableCell> Who </TableCell>
         <TableCell> AC </TableCell>
-        <TableCell> Penalty </TableCell>
+        <TableCell> {contestType === "ICPC" ? "Penalty" : "Score"} </TableCell>
         <TableCell> Hacks </TableCell>
         <TableCell> Rating change </TableCell>
         {
@@ -53,7 +54,7 @@ function StandingTableHeader(props) {
 }
 
 function StandingTableBody(props) {
-  const { rows } = props
+  const { rows, contestType } = props
   return (
     <TableBody>
       {
@@ -62,14 +63,14 @@ function StandingTableBody(props) {
             <TableCell> {row.rank} </TableCell>
             <TableCell> {row.party.members[0].handle} </TableCell>
             <TableCell> {row.acceptedProblemCount} </TableCell>
-            <TableCell> Dummy </TableCell>
+            <TableCell> {contestType === "ICPC" ? row.penalty : row.points} </TableCell>
             <TableCell> Dummy </TableCell>
             <TableCell>
               <RatingChangeCell ratingChange={row.ratingChange} />
             </TableCell>
             {
               row.problemResults.map(result =>
-                <ProblemResultCell result={result} />
+                <ProblemResultCell contestType={contestType} result={result} />
               )
             }
           </TableRow>
@@ -102,11 +103,12 @@ function RatingChangeCell(props) {
 }
 
 function ProblemResultCell(props) {
-  const { result } = props
+  const { result, contestType } = props
 
   const {
     bestSubmissionTimeSeconds,
-    rejectedAttemptCount
+    rejectedAttemptCount,
+    points
   } = result
 
   if (bestSubmissionTimeSeconds === undefined && rejectedAttemptCount === 0)
@@ -114,12 +116,14 @@ function ProblemResultCell(props) {
   else {
     const cellBackgroundColor = bestSubmissionTimeSeconds === undefined ? "bg-red-200" : "bg-green-200"
     const rejectedAttemptInfo = <p>{bestSubmissionTimeSeconds === undefined ? "-" : "+"}{rejectedAttemptCount === 0 ? "" : rejectedAttemptCount}</p>
+    const pointInfo = bestSubmissionTimeSeconds === undefined ? null : (contestType === "ICPC" ? null : <p>{points}</p>)
     const submissionTimeInfo = bestSubmissionTimeSeconds === undefined ? null : <p>{formatSeconds(bestSubmissionTimeSeconds)}</p>
 
     return (
       <TableCell className={cellBackgroundColor}>
         <div className="text-center">
           {rejectedAttemptInfo}
+          {pointInfo}
           {submissionTimeInfo}
         </div>
       </TableCell>

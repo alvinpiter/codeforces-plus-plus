@@ -44,7 +44,7 @@ export async function getContestList() {
 
 //handles is array of handle
 export async function getContestStandings(contestID, handles) {
-  const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&handles=${handles.join(';')}`
+  const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&handles=${handles.join(';')}&from=1&count=100`
   const jsonResponse = await get(url)
   const contestStandings = jsonResponse.result
 
