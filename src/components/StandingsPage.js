@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import StandingTable from './StandingTable'
-import { aggregateStandings } from '../features/aggregateStandings'
+import ContestPicker from './ContestPicker'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { getContestList } from '../api/codeforces'
 
 export default function StandingsPage() {
   let [isLoading, setIsLoading] = useState(true)
-  let [standings, setStandings] = useState()
+  let [contests, setContests] = useState([])
 
   useEffect(() => {
-    let prom = aggregateStandings(1392)
-    // let prom = aggregateStandings(19)
-    prom.then(result => {
+    let prom = getContestList()
+    prom.then(contests => {
       setIsLoading(false)
-      setStandings(result)
+      setContests(contests)
     })
   }, [])
 
@@ -21,7 +20,7 @@ export default function StandingsPage() {
       {
         isLoading ?
         <CircularProgress /> :
-        <StandingTable standings={standings} />
+        <ContestPicker contests={contests} />
       }
     </div>
   )
