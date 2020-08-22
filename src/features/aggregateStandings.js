@@ -31,11 +31,11 @@ export async function aggregateStandings(contestID) {
 
     let acceptedProblemCount = 0
     row.problemResults.forEach((result, index) => {
+      problemStatistics[index].tried += result.rejectedAttemptCount
+
       if (result.bestSubmissionTimeSeconds !== undefined) {
         acceptedProblemCount += 1
         problemStatistics[index].accepted += 1
-      } else {
-        problemStatistics[index].tried += result.rejectedAttemptCount
       }
     })
 

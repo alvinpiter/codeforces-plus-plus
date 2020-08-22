@@ -162,7 +162,7 @@ function ProblemResultCell(props) {
   } = result
 
   if (bestSubmissionTimeSeconds === undefined && rejectedAttemptCount === 0)
-    return null
+    return <TableCell></TableCell>
   else {
     const cellBackgroundColor = bestSubmissionTimeSeconds === undefined ? "bg-red-200" : "bg-green-200"
     const rejectedAttemptInfo = <p>{bestSubmissionTimeSeconds === undefined ? "-" : "+"}{rejectedAttemptCount === 0 ? "" : rejectedAttemptCount}</p>
