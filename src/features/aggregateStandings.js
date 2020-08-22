@@ -11,6 +11,10 @@ export async function aggregateStandings(contestID) {
   const userRatingChangeMap = getUserRatingChangeMap(contestRatingChanges)
   const userInfoMap = await getUserInfoMap(standings.rows)
 
+  let problemStatistics = []
+  for (let i = 0; i < standings.problems.length; i++)
+    problemStatistics.push({ accepted: 0, tried: 0 })
+
   let rankListRows = []
   for (let row of standings.rows) {
     const handle = row.party.members[0].handle
@@ -26,16 +30,21 @@ export async function aggregateStandings(contestID) {
     row.userInfos = userInfos
 
     let acceptedProblemCount = 0
-    for (let result of row.problemResults) {
-      if (result.bestSubmissionTimeSeconds !== undefined)
+    row.problemResults.forEach((result, index) => {
+      if (result.bestSubmissionTimeSeconds !== undefined) {
         acceptedProblemCount += 1
-    }
+        problemStatistics[index].accepted += 1
+      } else {
+        problemStatistics[index].tried += result.rejectedAttemptCount
+      }
+    })
 
     row.acceptedProblemCount = acceptedProblemCount
 
     rankListRows.push(row)
   }
 
+  standings.problemStatistics = problemStatistics
   standings.rows = rankListRows
 
   return standings
