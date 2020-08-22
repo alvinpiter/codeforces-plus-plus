@@ -114,11 +114,23 @@ function PartyCell(props) {
     return null
   } else {
     const handle = party.members[0].handle
+    const name = constructName(userInfos[0].firstName, userInfos[0].lastName)
     const rating = ratingChange.oldRating
     return (
-      <p>{getRatedSpan(handle, rating)}</p>
+      <p>{getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
     )
   }
+}
+
+function constructName(firstName, lastName) {
+  let name = ""
+  if (firstName !== undefined)
+    name = name + firstName
+
+  if (lastName !== undefined)
+    name = name + (name.length === 0 ? "" : " ") + lastName
+
+  return name
 }
 
 function RatingChangeCell(props) {
