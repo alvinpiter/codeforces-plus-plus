@@ -61,7 +61,13 @@ function StandingTableBody(props) {
         rows.map(row =>
           <TableRow key={row.party.members[0].handle}>
             <TableCell> {row.rank} </TableCell>
-            <TableCell> {row.party.members[0].handle} </TableCell>
+            <TableCell>
+              <PartyCell
+                party={row.party}
+                userInfos={row.userInfos}
+                ratingChange={row.ratingChange}
+              />
+            </TableCell>
             <TableCell> {row.acceptedProblemCount} </TableCell>
             <TableCell> {contestType === "ICPC" ? row.penalty : row.points} </TableCell>
             <TableCell>
@@ -94,6 +100,25 @@ function ProblemHeader(props) {
       </Tooltip>
     </TableCell>
   )
+}
+
+function PartyCell(props) {
+  const {
+    party,
+    userInfos,
+    ratingChange,
+  } = props
+
+  if (party.members.length > 1) {
+    //Implement this later
+    return null
+  } else {
+    const handle = party.members[0].handle
+    const rating = ratingChange.oldRating
+    return (
+      <p>{getRatedSpan(handle, rating)}</p>
+    )
+  }
 }
 
 function RatingChangeCell(props) {
