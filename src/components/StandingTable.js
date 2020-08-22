@@ -104,28 +104,26 @@ function RatingChangeCell(props) {
 function ProblemResultCell(props) {
   const { result } = props
 
-  if (result.hasOwnProperty('bestSubmissionTimeSeconds')) {
-    //Accepted
-    const {
-      bestSubmissionTimeSeconds,
-      rejectedAttemptCount
-    } = result
+  const {
+    bestSubmissionTimeSeconds,
+    rejectedAttemptCount
+  } = result
 
-    const rejectedAttemptCountText = (rejectedAttemptCount > 0 ? rejectedAttemptCount : "")
+  if (bestSubmissionTimeSeconds === undefined && rejectedAttemptCount === 0)
+    return null
+  else {
+    const cellBackgroundColor = bestSubmissionTimeSeconds === undefined ? "bg-red-200" : "bg-green-200"
+    const rejectedAttemptInfo = <p>{bestSubmissionTimeSeconds === undefined ? "-" : "+"}{rejectedAttemptCount === 0 ? "" : rejectedAttemptCount}</p>
+    const submissionTimeInfo = bestSubmissionTimeSeconds === undefined ? null : <p>{formatSeconds(bestSubmissionTimeSeconds)}</p>
 
     return (
-      <TableCell className="bg-green-200">
+      <TableCell className={cellBackgroundColor}>
         <div className="text-center">
-          <p>+{rejectedAttemptCountText}</p>
-          <p>{formatSeconds(bestSubmissionTimeSeconds)}</p>
+          {rejectedAttemptInfo}
+          {submissionTimeInfo}
         </div>
       </TableCell>
     )
-  } else if (result.rejectedAttemptCount > 0) {
-    //Attempted
-    return null
-  } else {
-    return null
   }
 }
 
