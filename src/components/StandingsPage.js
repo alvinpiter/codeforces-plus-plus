@@ -13,10 +13,11 @@ export default function StandingsPage() {
   let [standings, setStandings] = useState(null)
 
   const onPicked = (contest) => {
-    setIsLoadingStandings(true)
-
     const loadStandings = async (contest) => {
+      setIsLoadingStandings(true)
+
       const standings = await aggregateStandings(contest.id)
+
       setIsLoadingStandings(false)
       setStandings(standings)
     }
@@ -25,11 +26,14 @@ export default function StandingsPage() {
   }
 
   useEffect(() => {
-    let prom = getPastContestList()
-    prom.then(contests => {
+    const loadContests = async () => {
+      const contests = await getPastContestList()
+
       setIsLoadingContests(false)
       setContests(contests)
-    })
+    }
+
+    loadContests()
   }, [])
 
   return (
