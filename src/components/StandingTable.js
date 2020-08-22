@@ -19,7 +19,11 @@ export default function StandingTable(props) {
   return (
     <TableContainer component={Paper}>
       <Table>
-        <StandingTableHeader contestType={standings.contest.type} problems={standings.problems} />
+        <StandingTableHeader
+          contestType={standings.contest.type}
+          problems={standings.problems}
+          problemStatistics={standings.problemStatistics}
+        />
         <StandingTableBody contestType={standings.contest.type} rows={standings.rows} />
       </Table>
     </TableContainer>
@@ -28,7 +32,7 @@ export default function StandingTable(props) {
 
 //#, Who, AC count, Penalty, Hacks, Rating change, problems
 function StandingTableHeader(props) {
-  const { problems, contestType } = props
+  const { problems, problemStatistics, contestType } = props
 
   return (
     <TableHead>
@@ -40,7 +44,12 @@ function StandingTableHeader(props) {
         <TableCell> Hacks </TableCell>
         <TableCell> Rating change </TableCell>
         {
-          problems.map(problem => <ProblemHeader key={problem.index} problem={problem} />)
+          problems.map((problem, index) =>
+            <ProblemHeader
+              key={problem.index}
+              problem={problem}
+              problemStatistic={problemStatistics[index]}
+            />)
         }
       </TableRow>
     </TableHead>
@@ -80,12 +89,19 @@ function StandingTableBody(props) {
 }
 
 function ProblemHeader(props) {
-  const { problem } = props
+  const { problem, problemStatistic } = props
+
+  const acceptedInfo = <span className="text-green-500">{problemStatistic.accepted}</span>
+  const triedInfo = <span className="text-red-500">{problemStatistic.tried}</span>
+
   return (
     <TableCell align="center">
-      <Tooltip title={problem.name}>
-        <Link href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}> {problem.index} </Link>
-      </Tooltip>
+      <div>
+        <Tooltip title={problem.name}>
+          <Link href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}> {problem.index} </Link>
+        </Tooltip>
+        <p>{acceptedInfo}/{triedInfo}</p>
+      </div>
     </TableCell>
   )
 }
@@ -146,7 +162,7 @@ function ProblemResultCell(props) {
   } = result
 
   if (bestSubmissionTimeSeconds === undefined && rejectedAttemptCount === 0)
-    return null
+    return <TableCell></TableCell>
   else {
     const cellBackgroundColor = bestSubmissionTimeSeconds === undefined ? "bg-red-200" : "bg-green-200"
     const rejectedAttemptInfo = <p>{bestSubmissionTimeSeconds === undefined ? "-" : "+"}{rejectedAttemptCount === 0 ? "" : rejectedAttemptCount}</p>
