@@ -138,8 +138,10 @@ function PartyCell(props) {
       userInfos[0].rating ||
       0
 
+    const isOfficial = (party.participantType === "CONTESTANT")
+
     return (
-      <TableCell>
+      <TableCell className={isOfficial ? null : "bg-red-200"}>
         <p><CountryFlag countryCode={countryCode} /> {getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
       </TableCell>
     )

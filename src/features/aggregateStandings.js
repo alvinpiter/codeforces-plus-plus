@@ -95,7 +95,7 @@ async function getUserInfoMap(rankListRows) {
       userInfoPromises.push(getUserInfos(currentHandles))
       currentHandles = []
 
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise(resolve => setTimeout(resolve, 500))
     }
   }
 

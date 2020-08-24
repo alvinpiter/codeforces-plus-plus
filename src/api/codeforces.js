@@ -44,7 +44,7 @@ export async function getContestList() {
 
 export async function getContestStandings(contestID, params) {
   const queryString = toQueryString(params)
-  const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&${queryString}`
+  const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&${queryString}&from=1&count=250`
   const jsonResponse = await get(url)
   const contestStandings = jsonResponse.result
 
@@ -60,9 +60,12 @@ export async function getContestRatingChanges(contestID) {
 }
 
 function toQueryString(params) {
+  if (params === undefined)
+    return ""
+
   let queryString = ''
   for (let key in params) {
-    let value = (Array.isArray(params.key) ? params.key.join(';') : params.key)
+    let value = (Array.isArray(params.key) ? params[key].join(';') : params[key])
     queryString = `${queryString}&${key}=${value}`
   }
 
