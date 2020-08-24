@@ -7,7 +7,13 @@ import { getCountryCode } from '../utils/MyCountryList'
 
 export async function aggregateStandings(contestID, params) {
   let standings = await getContestStandings(contestID, params)
-  let contestRatingChanges = await getContestRatingChanges(contestID)
+
+  let contestRatingChanges
+  try {
+    contestRatingChanges = await getContestRatingChanges(contestID)
+  } catch (err) {
+    contestRatingChanges = []
+  }
 
   const userRatingChangeMap = getUserRatingChangeMap(contestRatingChanges)
   const userInfoMap = await getUserInfoMap(standings.rows)
