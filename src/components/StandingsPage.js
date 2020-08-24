@@ -3,7 +3,7 @@ import ContestPicker from './ContestPicker'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { getPastContestList } from '../features/getPastContestList'
 import { aggregateStandings } from '../features/aggregateStandings'
-import StandingTable from './StandingTable'
+import StandingTableWithFilter from './StandingTableWithFilter'
 
 export default function StandingsPage() {
   let [isLoadingContests, setIsLoadingContests] = useState(true)
@@ -48,12 +48,7 @@ export default function StandingsPage() {
         <CircularProgress /> :
         (standings === null ?
           null :
-          <StandingTable
-            contestType={standings.contest.type}
-            problems={standings.problems}
-            problemStatistics={standings.problemStatistics}
-            rows={standings.rows}
-          />
+          <StandingTableWithFilter standings={standings} />
         )
       }
     </div>

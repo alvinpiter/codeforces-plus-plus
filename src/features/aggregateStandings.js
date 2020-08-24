@@ -16,6 +16,8 @@ export async function aggregateStandings(contestID) {
   for (let i = 0; i < standings.problems.length; i++)
     problemStatistics.push({ accepted: 0, tried: 0 })
 
+  let countriesSet = new Set()
+
   let rankListRows = []
   for (let row of standings.rows) {
     const handle = row.party.members[0].handle
@@ -27,6 +29,9 @@ export async function aggregateStandings(contestID) {
     for (let member of row.party.members) {
       userInfos.push(userInfoMap.get(member.handle))
     }
+
+    if (userInfos.length > 0 && userInfos[0].country !== undefined)
+      countriesSet.add(userInfos[0].country)
 
     row.userInfos = userInfos
 
@@ -47,6 +52,15 @@ export async function aggregateStandings(contestID) {
 
   standings.problemStatistics = problemStatistics
   standings.rows = rankListRows
+
+  const sortedCountries = Array.from(countriesSet).sort().map(name => {
+    return {
+      name: name,
+      code: getCountryCode(name)
+    }
+  })
+
+  standings.countries = sortedCountries
 
   return standings
 }

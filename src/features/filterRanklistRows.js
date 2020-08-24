@@ -18,9 +18,14 @@ function filterRanklistRowsByCountryCodes(rows, countryCodes) {
     countryCodesSet.add(code)
 
   return rows.filter(row => {
-    if (row.hasOwnProperty('userInfo') && row.userInfo.hasOwnProperty('countryCode') && countryCodesSet.has(row.userInfo.countryCode))
-      return true
-    else
+    if (row.hasOwnProperty('userInfos')) {
+      for (let userInfo of row.userInfos) {
+        if (countryCodesSet.has(userInfo.countryCode))
+          return true
+      }
+
+      return false
+    } else
       return false
   })
 }
