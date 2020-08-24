@@ -11,21 +11,25 @@ import Link from '@material-ui/core/Link'
 import ReactCountryFlag from 'react-country-flag'
 
 export default function StandingTable(props) {
-  const { standings } = props
-
-  if (standings === null) {
-    return null
-  }
+  const {
+    contestType,
+    problems,
+    problemStatistics,
+    rows
+  } = props
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <StandingTableHeader
-          contestType={standings.contest.type}
-          problems={standings.problems}
-          problemStatistics={standings.problemStatistics}
+          contestType={contestType}
+          problems={problems}
+          problemStatistics={problemStatistics}
         />
-        <StandingTableBody contestType={standings.contest.type} rows={standings.rows} />
+        <StandingTableBody
+          contestType={contestType}
+          rows={rows}
+        />
       </Table>
     </TableContainer>
   )

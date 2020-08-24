@@ -46,7 +46,15 @@ export default function StandingsPage() {
       {
         isLoadingStandings ?
         <CircularProgress /> :
-        <StandingTable standings={standings} />
+        (standings === null ?
+          null :
+          <StandingTable
+            contestType={standings.contest.type}
+            problems={standings.problems}
+            problemStatistics={standings.problemStatistics}
+            rows={standings.rows}
+          />
+        )
       }
     </div>
   )
