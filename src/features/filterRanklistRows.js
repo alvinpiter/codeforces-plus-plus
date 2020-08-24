@@ -2,23 +2,23 @@
 /*
 Supported filterParameters:
 {
-  countries: ["Indonesia", "Japan"]
+  countryCodes: ["ID", "JP"]
 }
 */
 export function filterRanklistRows(rows, filterParameters) {
-  if (filterParameters.hasOwnProperty('countries'))
-    rows = filterRanklistRowsByCountries(rows, filterParameters.countries)
+  if (filterParameters.hasOwnProperty('countryCodes'))
+    rows = filterRanklistRowsByCountryCodes(rows, filterParameters.countryCodes)
 
   return rows
 }
 
-function filterRanklistRowsByCountries(rows, countries) {
-  let countriesSet = new Set()
-  for (let country of countries)
-    countriesSet.add(country)
+function filterRanklistRowsByCountryCodes(rows, countryCodes) {
+  let countryCodesSet = new Set()
+  for (let code of countryCodes)
+    countryCodesSet.add(code)
 
   return rows.filter(row => {
-    if (row.hasOwnProperty('userInfo') && row.userInfo.hasOwnProperty('country') && countriesSet.has(row.userInfo.country))
+    if (row.hasOwnProperty('userInfo') && row.userInfo.hasOwnProperty('countryCode') && countryCodesSet.has(row.userInfo.countryCode))
       return true
     else
       return false
