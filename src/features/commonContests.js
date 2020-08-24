@@ -23,7 +23,9 @@ export async function commonContests(firstHandle, secondHandle) {
   let contestStandingsPromise = []
   for (let contestID of commonContestIDs) {
     await new Promise(resolve => setTimeout(resolve, 500))
-    contestStandingsPromise.push(getContestStandings(contestID, [firstHandle, secondHandle]))
+    contestStandingsPromise.push(getContestStandings(contestID, {
+      handles: [firstHandle, secondHandle]
+    }))
   }
 
   let result = []

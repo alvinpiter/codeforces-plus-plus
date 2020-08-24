@@ -42,9 +42,9 @@ export async function getContestList() {
   return contests
 }
 
-//handles is array of handle
-export async function getContestStandings(contestID, handles) {
-  const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&handles=${handles.join(';')}&from=1&count=100`
+export async function getContestStandings(contestID, params) {
+  const queryString = toQueryString(params)
+  const url = `${codeforcesBaseURL}/contest.standings?contestId=${contestID}&${queryString}`
   const jsonResponse = await get(url)
   const contestStandings = jsonResponse.result
 
@@ -57,4 +57,14 @@ export async function getContestRatingChanges(contestID) {
   const ratingChanges = jsonResponse.result
 
   return ratingChanges
+}
+
+function toQueryString(params) {
+  let queryString = ''
+  for (let key in params) {
+    let value = (Array.isArray(params.key) ? params.key.join(';') : params.key)
+    queryString = `${queryString}&${key}=${value}`
+  }
+
+  return queryString
 }

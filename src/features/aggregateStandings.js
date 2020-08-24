@@ -5,8 +5,8 @@ import {
 } from '../api/codeforces'
 import { getCountryCode } from '../utils/MyCountryList'
 
-export async function aggregateStandings(contestID) {
-  let standings = await getContestStandings(contestID, [])
+export async function aggregateStandings(contestID, params) {
+  let standings = await getContestStandings(contestID, params)
   let contestRatingChanges = await getContestRatingChanges(contestID)
 
   const userRatingChangeMap = getUserRatingChangeMap(contestRatingChanges)
