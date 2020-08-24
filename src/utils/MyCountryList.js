@@ -1,6 +1,9 @@
 import { overwrite, getCode } from 'country-list'
 
 export function getCountryCode(countryName) {
+  if (countryName === undefined)
+    return undefined
+
   const nameCodePairs = [
     ["United States", "US"],
     ["Taiwan", "TW"],

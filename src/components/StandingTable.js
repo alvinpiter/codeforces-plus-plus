@@ -8,7 +8,6 @@ import TableCell from '@material-ui/core/TableCell'
 import Paper from '@material-ui/core/Paper'
 import Tooltip from '@material-ui/core/Tooltip'
 import Link from '@material-ui/core/Link'
-import { getCountryCode } from '../utils/MyCountryList'
 import ReactCountryFlag from 'react-country-flag'
 
 export default function StandingTable(props) {
@@ -109,11 +108,7 @@ function ProblemHeader(props) {
 }
 
 function CountryFlag(props) {
-  const { countryName } = props
-  if (countryName === undefined)
-    return null
-
-  const countryCode = getCountryCode(countryName)
+  const { countryCode } = props
   if (countryCode === undefined)
     return null
   else
@@ -133,11 +128,11 @@ function PartyCell(props) {
   } else {
     const handle = party.members[0].handle
     const name = constructName(userInfos[0].firstName, userInfos[0].lastName)
-    const countryName = userInfos[0].country
+    const countryCode = userInfos[0].countryCode
     const rating = ratingChange.oldRating
     return (
       <TableCell>
-        <p><CountryFlag countryName={countryName} /> {getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
+        <p><CountryFlag countryCode={countryCode} /> {getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
       </TableCell>
     )
   }

@@ -3,6 +3,7 @@ import {
   getContestStandings,
   getContestRatingChanges
 } from '../api/codeforces'
+import { getCountryCode } from '../utils/MyCountryList'
 
 export async function aggregateStandings(contestID) {
   let standings = await getContestStandings(contestID, [])
@@ -100,6 +101,7 @@ async function getUserInfoMap(rankListRows) {
     }
 
     for (let userInfo of userInfos) {
+      userInfo.countryCode = getCountryCode(userInfo.country)
       userInfoMap.set(userInfo.handle, userInfo)
     }
   }
