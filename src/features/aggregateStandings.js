@@ -5,9 +5,15 @@ import {
 } from '../api/codeforces'
 import { getCountryCode } from '../utils/MyCountryList'
 
-export async function aggregateStandings(contestID) {
-  let standings = await getContestStandings(contestID, [])
-  let contestRatingChanges = await getContestRatingChanges(contestID)
+export async function aggregateStandings(contestID, params) {
+  let standings = await getContestStandings(contestID, params)
+
+  let contestRatingChanges
+  try {
+    contestRatingChanges = await getContestRatingChanges(contestID)
+  } catch (err) {
+    contestRatingChanges = []
+  }
 
   const userRatingChangeMap = getUserRatingChangeMap(contestRatingChanges)
   const userInfoMap = await getUserInfoMap(standings.rows)
@@ -95,7 +101,7 @@ async function getUserInfoMap(rankListRows) {
       userInfoPromises.push(getUserInfos(currentHandles))
       currentHandles = []
 
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise(resolve => setTimeout(resolve, 500))
     }
   }
 

@@ -133,9 +133,15 @@ function PartyCell(props) {
     const handle = party.members[0].handle
     const name = constructName(userInfos[0].firstName, userInfos[0].lastName)
     const countryCode = userInfos[0].countryCode
-    const rating = ratingChange.oldRating
+    const rating =
+      (ratingChange && ratingChange.oldRating) ||
+      userInfos[0].rating ||
+      0
+
+    const isOfficial = (party.participantType === "CONTESTANT")
+
     return (
-      <TableCell>
+      <TableCell className={isOfficial ? null : "bg-red-200"}>
         <p><CountryFlag countryCode={countryCode} /> {getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
       </TableCell>
     )
@@ -155,6 +161,9 @@ function constructName(firstName, lastName) {
 
 function RatingChangeCell(props) {
   const { ratingChange } = props
+  if (ratingChange === undefined)
+    return <TableCell> {null} </TableCell>
+
   const { oldRating, newRating } = ratingChange
 
   return (
@@ -244,7 +253,9 @@ function getRatingChangeSpan(diff) {
 }
 
 function getRatingColor(rating) {
-  if (rating < 1200)
+  if (rating === 0)
+    return ""
+  else if (rating < 1200)
     return "text-gray-500"
   else if (rating < 1400)
     return "text-green-500"
