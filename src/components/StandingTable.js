@@ -126,63 +126,47 @@ function PartyCell(props) {
     ratingChange,
   } = props
 
-  if (party.members.length > 1) {
-    const teamInfo =
-    <p>
-      <Link href={`https://codeforces.com/team/${party.teamId}`}>
-        {party.teamName}:
-      </Link>
-    </p>
-
-    const membersInfo = party.members.map((member, index) => {
-      const handle = member.handle
-      const name = constructName(userInfos[index].firstName, userInfos[index].lastName)
-      const countryCode = userInfos[index].countryCode
-      const rating =
-        (ratingChange && ratingChange.oldRating) ||
-        userInfos[index].rating ||
-        0
-
-      const flagComponent = <CountryFlag countryCode={countryCode} />
-
-      const handleComponent =
-        <Link href={`https://codeforces.com/profile/${handle}`} >
-          {getRatedSpan(handle, rating)}
+  let teamInfo = null
+  if (party.teamId !== undefined) {
+    teamInfo =
+      <p>
+        <Link href={`https://codeforces.com/team/${party.teamId}`}>
+          {party.teamName}:
         </Link>
+      </p>
+  }
 
-      const nameComponent = (name === "" ? null : `(${name})`)
-
-      return <p>{flagComponent} {handleComponent} {nameComponent}</p>
-    })
-
-    const isOfficial = (party.participantType === "CONTESTANT")
-
-    //Implement this later
-    return (
-      <TableCell className={isOfficial ? null : "bg-red-200"}>
-        <div>
-          {teamInfo}
-          {membersInfo}
-        </div>
-      </TableCell>
-    )
-  } else {
-    const handle = party.members[0].handle
-    const name = constructName(userInfos[0].firstName, userInfos[0].lastName)
-    const countryCode = userInfos[0].countryCode
+  let membersInfo = party.members.map((member, index) => {
+    const handle = member.handle
+    const name = constructName(userInfos[index].firstName, userInfos[index].lastName)
+    const countryCode = userInfos[index].countryCode
     const rating =
       (ratingChange && ratingChange.oldRating) ||
-      userInfos[0].rating ||
+      userInfos[index].rating ||
       0
 
-    const isOfficial = (party.participantType === "CONTESTANT")
+    const flagComponent = <CountryFlag countryCode={countryCode} />
 
-    return (
-      <TableCell className={isOfficial ? null : "bg-red-200"}>
-        <p><CountryFlag countryCode={countryCode} /> {getRatedSpan(handle, rating)} {name === "" ? null : `(${name})`}</p>
-      </TableCell>
-    )
-  }
+    const handleComponent =
+      <Link href={`https://codeforces.com/profile/${handle}`} >
+        {getRatedSpan(handle, rating)}
+      </Link>
+
+    const nameComponent = (name === "" ? null : `(${name})`)
+
+    return <p key={handle}>{flagComponent} {handleComponent} {nameComponent}</p>
+  })
+
+  const isOfficial = (party.participantType === "CONTESTANT")
+
+  return (
+    <TableCell className={isOfficial ? null : "bg-red-200"}>
+      <div>
+        {teamInfo}
+        {membersInfo}
+      </div>
+    </TableCell>
+  )
 }
 
 function constructName(firstName, lastName) {
