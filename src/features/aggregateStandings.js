@@ -88,8 +88,10 @@ function getUserRatingChangeMap(contestRatingChanges) {
 
 async function getUserInfoMap(rankListRows) {
   let handles = []
-  for (let row of rankListRows)
-    handles.push(row.party.members[0].handle)
+  for (let row of rankListRows) {
+    for (let { handle } of row.party.members)
+      handles.push(handle)
+  }
 
   //call user.info API in batch
   let userInfoPromises = []

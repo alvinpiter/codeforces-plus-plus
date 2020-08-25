@@ -127,8 +127,45 @@ function PartyCell(props) {
   } = props
 
   if (party.members.length > 1) {
+    const teamInfo =
+    <p>
+      <Link href={`https://codeforces.com/team/${party.teamId}`}>
+        {party.teamName}:
+      </Link>
+    </p>
+
+    const membersInfo = party.members.map((member, index) => {
+      const handle = member.handle
+      const name = constructName(userInfos[index].firstName, userInfos[index].lastName)
+      const countryCode = userInfos[index].countryCode
+      const rating =
+        (ratingChange && ratingChange.oldRating) ||
+        userInfos[index].rating ||
+        0
+
+      const flagComponent = <CountryFlag countryCode={countryCode} />
+
+      const handleComponent =
+        <Link href={`https://codeforces.com/profile/${handle}`} >
+          {getRatedSpan(handle, rating)}
+        </Link>
+
+      const nameComponent = (name === "" ? null : `(${name})`)
+
+      return <p>{flagComponent} {handleComponent} {nameComponent}</p>
+    })
+
+    const isOfficial = (party.participantType === "CONTESTANT")
+
     //Implement this later
-    return null
+    return (
+      <TableCell className={isOfficial ? null : "bg-red-200"}>
+        <div>
+          {teamInfo}
+          {membersInfo}
+        </div>
+      </TableCell>
+    )
   } else {
     const handle = party.members[0].handle
     const name = constructName(userInfos[0].firstName, userInfos[0].lastName)
