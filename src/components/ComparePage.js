@@ -18,6 +18,8 @@ export default function ComparePage(props) {
 
       const contests = await getCommonContests(user, rival)
 
+      console.log(contests)
+
       setIsLoadingCommonContests(false)
       setCommonContests(contests)
     }
@@ -52,7 +54,11 @@ export default function ComparePage(props) {
       {
         isLoadingCommonContests ?
         <CircularProgress /> :
-        <CommonContests />
+        <CommonContests
+          firstHandle={userHandle}
+          secondHandle={rivalHandle}
+          commonContests={commonContests}
+        />
       }
     </div>
   )
