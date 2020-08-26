@@ -65,7 +65,7 @@ function toQueryString(params) {
 
   let queryString = ''
   for (let key in params) {
-    let value = (Array.isArray(params.key) ? params[key].join(';') : params[key])
+    let value = (Array.isArray(params[key]) ? params[key].join(';') : params[key])
     queryString = `${queryString}&${key}=${value}`
   }
 

@@ -3,7 +3,7 @@ import {
   getContestStandings
 } from '../api/codeforces'
 
-export async function commonContests(firstHandle, secondHandle) {
+export async function getCommonContests(firstHandle, secondHandle) {
   const firstRatingHistory = await getUserRatingHistory(firstHandle)
   const secondRatingHistory = await getUserRatingHistory(secondHandle)
 
