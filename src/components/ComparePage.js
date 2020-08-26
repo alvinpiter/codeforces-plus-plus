@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import { commonContests } from '../features/commonContests'
+import { getCommonContests } from '../features/getCommonContests'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import CommonContests from './CommonContests'
 
@@ -16,7 +16,7 @@ export default function ComparePage(props) {
     const loadCommonContests = async (user, rival) => {
       setIsLoadingCommonContests(true)
 
-      const contests = await commonContests(user, rival)
+      const contests = await getCommonContests(user, rival)
 
       setIsLoadingCommonContests(false)
       setCommonContests(contests)
