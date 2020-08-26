@@ -8,6 +8,10 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Link from '@material-ui/core/Link'
 import ProblemResult from './ProblemResult'
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export default function CommonContests(props) {
   const { firstHandle, secondHandle, commonContests } = props
@@ -25,10 +29,25 @@ export default function CommonContests(props) {
       numFirstWin += 1
   }
 
+  const commonContestsComponent = commonContests.map(commonContest => {
+    return (
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Link href={`https://codeforces.com/contest/${commonContest.contest.id}`}>
+            {commonContest.contest.name}
+          </Link>
+        </AccordionSummary>
+        <AccordionDetails>
+          <CommonContest contest={commonContest} />
+        </AccordionDetails>
+      </Accordion>
+    )
+  })
+
   return (
     <div>
       <p> {firstHandle} wins against {secondHandle} {numFirstWin} times in their last {numContests} common contests </p>
-      <CommonContest contest={commonContests[0]} />
+      {commonContestsComponent}
     </div>
   )
 }
