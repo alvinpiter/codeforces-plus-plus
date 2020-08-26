@@ -12,6 +12,8 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import RatingChange from './RatingChange'
+import { ratedFormat } from '../utils/rating'
 
 export default function CommonContests(props) {
   const { firstHandle, secondHandle, commonContests } = props
@@ -66,8 +68,12 @@ function CommonContest(props) {
         <TableHead>
           <TableRow>
             <TableCell className="w-1/2"> {null} </TableCell>
-            <TableCell align="center"> {firstUserStatistic.handle} </TableCell>
-            <TableCell align="center"> {secondUserStatistic.handle} </TableCell>
+            <TableCell align="center">
+              {ratedFormat(firstUserStatistic.handle, firstUserStatistic.ratingChange.oldRating)}
+            </TableCell>
+            <TableCell align="center">
+              {ratedFormat(secondUserStatistic.handle, secondUserStatistic.ratingChange.oldRating)}
+            </TableCell>
           </TableRow>
         </TableHead>
 
@@ -80,8 +86,12 @@ function CommonContest(props) {
 
           <TableRow>
             <TableCell> Rating change </TableCell>
-            <TableCell align="center"> TODO </TableCell>
-            <TableCell align="center"> TODO </TableCell>
+            <TableCell align="center">
+              <RatingChange ratingChange={firstUserStatistic.ratingChange} />
+            </TableCell>
+            <TableCell align="center">
+              <RatingChange ratingChange={secondUserStatistic.ratingChange} />
+            </TableCell>
           </TableRow>
 
           {
