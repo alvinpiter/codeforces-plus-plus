@@ -38,7 +38,11 @@ export default function CommonContests(props) {
           </Link>
         </AccordionSummary>
         <AccordionDetails>
-          <CommonContest contest={commonContest} />
+          <div className="w-full flex justify-center">
+            <div className="w-2/3">
+              <CommonContest contest={commonContest} />
+            </div>
+          </div>
         </AccordionDetails>
       </Accordion>
     )
@@ -61,7 +65,7 @@ function CommonContest(props) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell className="w-1/4"> {null} </TableCell>
+            <TableCell className="w-1/2"> {null} </TableCell>
             <TableCell align="center"> {firstUserStatistic.handle} </TableCell>
             <TableCell align="center"> {secondUserStatistic.handle} </TableCell>
           </TableRow>
@@ -109,9 +113,5 @@ function CommonContest(props) {
       </Table>
     </TableContainer>
 
-  return (
-    <div>
-      {table}
-    </div>
-  )
+  return table
 }
