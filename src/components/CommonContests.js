@@ -36,46 +36,31 @@ export default function CommonContests(props) {
 function CommonContest(props) {
   const { contest } = props
   const { firstUserStatistic, secondUserStatistic } = contest
-  const firstTable =
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell> {null} </TableCell>
-            <TableCell> {firstUserStatistic.handle} </TableCell>
-            <TableCell> {secondUserStatistic.handle} </TableCell>
-          </TableRow>
-        </TableHead>
 
-        <TableBody>
-          <TableRow>
-            <TableCell align="right"> Rank </TableCell>
-            <TableCell> {firstUserStatistic.rank} </TableCell>
-            <TableCell> {secondUserStatistic.rank} </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell align="right"> Rating change </TableCell>
-            <TableCell> TODO </TableCell>
-            <TableCell> TODO </TableCell>
-          </TableRow>
-
-        </TableBody>
-      </Table>
-    </TableContainer>
-
-  const secondTable =
+  const table =
     <TableContainer component={Paper} >
-      <Table>
+      <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell> {null} </TableCell>
+            <TableCell className="w-1/4"> {null} </TableCell>
             <TableCell align="center"> {firstUserStatistic.handle} </TableCell>
             <TableCell align="center"> {secondUserStatistic.handle} </TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
+          <TableRow>
+            <TableCell> Rank </TableCell>
+            <TableCell align="center"> {firstUserStatistic.rank} </TableCell>
+            <TableCell align="center"> {secondUserStatistic.rank} </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell> Rating change </TableCell>
+            <TableCell align="center"> TODO </TableCell>
+            <TableCell align="center"> TODO </TableCell>
+          </TableRow>
+
           {
             contest.problems.map((problem, index) => {
               return (
@@ -106,9 +91,8 @@ function CommonContest(props) {
     </TableContainer>
 
   return (
-    <div className="space-y-2">
-      {firstTable}
-      {secondTable}
+    <div>
+      {table}
     </div>
   )
 }
