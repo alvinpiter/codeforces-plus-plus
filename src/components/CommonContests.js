@@ -104,17 +104,17 @@ function CommonContest(props) {
                     </Link>
                   </TableCell>
                   <TableCell>
-                      <ProblemResult
-                        result={firstUserStatistic.problemResults[index]}
-                        stacked={false}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <ProblemResult
-                        result={secondUserStatistic.problemResults[index]}
-                        stacked={false}
-                      />
-                    </TableCell>
+                    <ProblemResult
+                      result={firstUserStatistic.problemResults[index]}
+                      type={contest.type}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <ProblemResult
+                      result={secondUserStatistic.problemResults[index]}
+                      type={contest.type}
+                    />
+                  </TableCell>
                 </TableRow>
               )
             })
