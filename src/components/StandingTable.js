@@ -11,6 +11,7 @@ import Link from '@material-ui/core/Link'
 import RatingChange from './RatingChange'
 import Party from './Party'
 import ProblemResult from './ProblemResult'
+import Hacks from './Hacks'
 
 export default function StandingTable(props) {
   const {
@@ -80,10 +81,12 @@ function StandingTableBody(props) {
             </TableCell>
             <TableCell> {row.acceptedProblemCount} </TableCell>
             <TableCell> {contestType === "ICPC" ? row.penalty : row.points} </TableCell>
-            <HacksCell
-              successfulCount={row.successfulHackCount}
-              unsuccessfulCount={row.unsuccessfulHackCount}
-            />
+            <TableCell>
+              <Hacks
+                successfulCount={row.successfulHackCount}
+                unsuccessfulCount={row.unsuccessfulHackCount}
+              />
+            </TableCell>
             <TableCell>
               <RatingChange ratingChange={row.ratingChange} />
             </TableCell>
@@ -115,32 +118,6 @@ function ProblemHeader(props) {
         </Tooltip>
         <p>{acceptedInfo}/{triedInfo}</p>
       </div>
-    </TableCell>
-  )
-}
-
-function HacksCell(props) {
-  const {
-    successfulCount,
-    unsuccessfulCount
-  } = props
-
-  const successfulCountInfo = <span className="text-green-500">+{successfulCount}</span>
-  const unsuccessfulCountInfo = <span className="text-red-500">-{unsuccessfulCount}</span>
-
-  let cell
-  if (successfulCount === 0 && unsuccessfulCount === 0)
-    cell = null
-  else if (successfulCount > 0 && unsuccessfulCount > 0)
-    cell = <p>{successfulCountInfo}:{unsuccessfulCountInfo}</p>
-  else if (successfulCount > 0)
-    cell = <p>{successfulCountInfo}</p>
-  else
-    cell = <p>{unsuccessfulCountInfo}</p>
-
-  return (
-    <TableCell>
-      {cell}
     </TableCell>
   )
 }

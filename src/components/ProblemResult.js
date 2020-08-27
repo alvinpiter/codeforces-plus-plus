@@ -47,10 +47,10 @@ export default function ProblemResult(props) {
 
 function getPointsComponent(points, type) {
   if (type === "IOI") {
-    const styleClass = `font-bold ${points === 100 ? "text-green-500" : ""}`
+    const styleClass = `font-bold ${points === 100 ? "text-green-600" : ""}`
     return <p className={styleClass}>{points}</p>
   } else if (type === "CF") {
-    return <p className="font-bold text-green-500">{points}</p>
+    return <p className="font-bold text-green-600">{points}</p>
   } else {
     return null
   }
