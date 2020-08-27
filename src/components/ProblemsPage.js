@@ -3,6 +3,7 @@ import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/cor
 import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
 import { getAttemptedAndSolvedProblemIDs } from '../features/getAttemptedAndSolvedProblemIDs'
+import { enhanceProblems } from '../features/enhanceProblems'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
@@ -36,38 +37,7 @@ export default function ProblemsPage() {
     getProblems(handle)
   }
 
-  const attemptedProblemsMap = new Map()
-  const solvedProblemsMap = new Map()
-
-  if (attemptedAndSolvedProblemIDs !== null) {
-    for (let { id, submittedID } of attemptedAndSolvedProblemIDs.attemptedProblemIDs)
-      attemptedProblemsMap.set(id, submittedID)
-
-    for (let { id, submittedID } of attemptedAndSolvedProblemIDs.solvedProblemIDs)
-      solvedProblemsMap.set(id, submittedID)
-  }
-
-  let enhancedProblems = []
-  for (let problem of allProblems) {
-    let submittedID, state
-
-    if (attemptedProblemsMap.has(problem.id)) {
-      submittedID = attemptedProblemsMap.get(problem.id)
-      state = -1
-    } else if (solvedProblemsMap.has(problem.id)) {
-      submittedID = solvedProblemsMap.get(problem.id)
-      state = 1
-    } else {
-      submittedID = null
-      state = 0
-    }
-
-    enhancedProblems.push({
-      ...problem,
-      submittedID: submittedID,
-      state: state
-    })
-  }
+  const enhancedProblems = enhanceProblems(allProblems, attemptedAndSolvedProblemIDs)
 
   return (
     <div>
