@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
-import { getUserProblemIDs } from '../features/getUserProblemIDs'
+import { getAttemptedAndSolvedProblemIDs } from '../features/getAttemptedAndSolvedProblemIDs'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [allProblems, setAllProblems] = useState([])
-  const [userProblemIDs, setUserProblemIDs] = useState(null)
+  const [attemptedAndSolvedProblemIDs, setAttemptedAndSolvedProblemIDs] = useState(null)
 
   useEffect(() => {
     const getAllProblems = async () => {
@@ -27,10 +27,10 @@ export default function ProblemsPage() {
     const getProblems = async (handle) => {
       setIsLoading(true)
 
-      let userProblemIDs = await getUserProblemIDs(handle, allProblems)
+      let attemptedAndSolvedProblemIDs = await getAttemptedAndSolvedProblemIDs(handle)
 
       setIsLoading(false)
-      setUserProblemIDs(userProblemIDs)
+      setAttemptedAndSolvedProblemIDs(attemptedAndSolvedProblemIDs)
     }
 
     getProblems(handle)
@@ -39,11 +39,11 @@ export default function ProblemsPage() {
   const attemptedProblemsMap = new Map()
   const solvedProblemsMap = new Map()
 
-  if (userProblemIDs !== null) {
-    for (let { id, submittedID } of userProblemIDs.attemptedProblemIDs)
+  if (attemptedAndSolvedProblemIDs !== null) {
+    for (let { id, submittedID } of attemptedAndSolvedProblemIDs.attemptedProblemIDs)
       attemptedProblemsMap.set(id, submittedID)
 
-    for (let { id, submittedID } of userProblemIDs.solvedProblemIDs)
+    for (let { id, submittedID } of attemptedAndSolvedProblemIDs.solvedProblemIDs)
       solvedProblemsMap.set(id, submittedID)
   }
 

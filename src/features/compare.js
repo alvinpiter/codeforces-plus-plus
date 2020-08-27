@@ -2,7 +2,7 @@ import { getUserSubmissions } from '../api/codeforces.js'
 import { filterSubmissions } from './filterSubmissions'
 import { filterProblems } from './filterProblems'
 
-//Returns an array of problems solved by handle2 but not by handle1
+//Returns an array of enhanced problems solved by handle2 but not by handle1
 export async function compare(handle1, handle2) {
   const firstSubmissions = getUserSubmissions(handle1)
   const secondSubmissions = getUserSubmissions(handle2)

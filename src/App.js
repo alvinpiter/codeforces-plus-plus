@@ -1,11 +1,11 @@
 import React from 'react'
-import ComparePage from './components/ComparePage'
+import ProblemsPage from './components/ProblemsPage'
 
 function App() {
 
   return (
     <div>
-      <ComparePage />
+      <ProblemsPage />
     </div>
   );
 }
