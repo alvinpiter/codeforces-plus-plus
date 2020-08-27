@@ -29,8 +29,7 @@ export default function Party(props) {
       userInfos[index].rating ||
       0
 
-    // const flagComponent = <CountryFlag countryCode={countryCode} />
-    const flagComponent = <ReactCountryFlag countryCode={countryCode} />
+    const flagComponent = <CountryFlag countryCode={countryCode} />
 
     const handleComponent =
       <Link href={`https://codeforces.com/profile/${handle}`} >
@@ -48,6 +47,14 @@ export default function Party(props) {
       {membersComponent}
     </div>
   )
+}
+
+function CountryFlag(props) {
+  const { countryCode } = props
+  if (countryCode === undefined)
+    return null
+  else
+    return <ReactCountryFlag countryCode={countryCode} />
 }
 
 function constructFullName(firstName, lastName) {
