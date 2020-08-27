@@ -1,11 +1,11 @@
 import React from 'react'
-import ComparePage from './components/ComparePage'
+import StandingsPage from './components/StandingsPage'
 
 function App() {
 
   return (
     <div>
-      <ComparePage />
+      <StandingsPage />
     </div>
   );
 }
