@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper'
 import Tooltip from '@material-ui/core/Tooltip'
 import Link from '@material-ui/core/Link'
 import ReactCountryFlag from 'react-country-flag'
+import RatingChange from './RatingChange'
 
 export default function StandingTable(props) {
   const {
@@ -80,7 +81,9 @@ function StandingTableBody(props) {
               successfulCount={row.successfulHackCount}
               unsuccessfulCount={row.unsuccessfulHackCount}
             />
-            <RatingChangeCell ratingChange={row.ratingChange} />
+            <TableCell>
+              <RatingChange ratingChange={row.ratingChange} />
+            </TableCell>
             {
               row.problemResults.map(result =>
                 <ProblemResultCell contestType={contestType} result={result} />
@@ -178,22 +181,6 @@ function constructName(firstName, lastName) {
     name = name + (name.length === 0 ? "" : " ") + lastName
 
   return name
-}
-
-function RatingChangeCell(props) {
-  const { ratingChange } = props
-  if (ratingChange === undefined)
-    return <TableCell> {null} </TableCell>
-
-  const { oldRating, newRating } = ratingChange
-
-  return (
-    <TableCell>
-      <p>
-        {getRatedSpan(oldRating, oldRating)} ({getRatingChangeSpan(newRating - oldRating)}) {getRatedSpan(newRating, newRating)}
-      </p>
-    </TableCell>
-  )
 }
 
 function ProblemResultCell(props) {
