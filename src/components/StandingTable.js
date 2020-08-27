@@ -47,7 +47,9 @@ function StandingTableHeader(props) {
       <TableRow>
         <TableCell> # </TableCell>
         <TableCell> Who </TableCell>
-        <TableCell> AC </TableCell>
+        {
+          contestType === "IOI" ? null : <TableCell> AC </TableCell>
+        }
         <TableCell> {contestType === "ICPC" ? "Penalty" : "Score"} </TableCell>
         <TableCell> Hacks </TableCell>
         <TableCell> Rating change </TableCell>
@@ -79,7 +81,11 @@ function StandingTableBody(props) {
                 ratingChange={row.ratingChange}
               />
             </TableCell>
-            <TableCell> {row.acceptedProblemCount} </TableCell>
+            {
+              contestType === "IOI" ?
+              null :
+              <TableCell> {row.acceptedProblemCount} </TableCell>
+            }
             <TableCell> {contestType === "ICPC" ? row.penalty : row.points} </TableCell>
             <TableCell>
               <Hacks
