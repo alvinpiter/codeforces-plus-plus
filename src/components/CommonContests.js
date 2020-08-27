@@ -33,7 +33,7 @@ export default function CommonContests(props) {
 
   const commonContestsComponent = commonContests.map(commonContest => {
     return (
-      <Accordion>
+      <Accordion key={commonContest.contest.id}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Link href={`https://codeforces.com/contest/${commonContest.contest.id}`}>
             {commonContest.contest.name}
@@ -97,7 +97,7 @@ function CommonContest(props) {
           {
             contest.problems.map((problem, index) => {
               return (
-                <TableRow>
+                <TableRow key={problem.index}>
                   <TableCell>
                     <Link href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}>
                       {problem.index}. {problem.name}
