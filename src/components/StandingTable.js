@@ -10,6 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Link from '@material-ui/core/Link'
 import RatingChange from './RatingChange'
 import Party from './Party'
+import ProblemResult from './ProblemResult'
 
 export default function StandingTable(props) {
   const {
@@ -88,7 +89,9 @@ function StandingTableBody(props) {
             </TableCell>
             {
               row.problemResults.map(result =>
-                <ProblemResultCell contestType={contestType} result={result} />
+                <TableCell>
+                  <ProblemResult result={result} type={contestType} />
+                </TableCell>
               )
             }
           </TableRow>
@@ -116,35 +119,6 @@ function ProblemHeader(props) {
   )
 }
 
-function ProblemResultCell(props) {
-  const { result, contestType } = props
-
-  const {
-    bestSubmissionTimeSeconds,
-    rejectedAttemptCount,
-    points
-  } = result
-
-  if (bestSubmissionTimeSeconds === undefined && rejectedAttemptCount === 0)
-    return <TableCell></TableCell>
-  else {
-    const cellBackgroundColor = bestSubmissionTimeSeconds === undefined ? "bg-red-200" : "bg-green-200"
-    const rejectedAttemptInfo = <p>{bestSubmissionTimeSeconds === undefined ? "-" : "+"}{rejectedAttemptCount === 0 ? "" : rejectedAttemptCount}</p>
-    const pointInfo = bestSubmissionTimeSeconds === undefined ? null : (contestType === "ICPC" ? null : <p>{points}</p>)
-    const submissionTimeInfo = bestSubmissionTimeSeconds === undefined ? null : <p>{formatSeconds(bestSubmissionTimeSeconds)}</p>
-
-    return (
-      <TableCell className={cellBackgroundColor}>
-        <div className="text-center">
-          {rejectedAttemptInfo}
-          {pointInfo}
-          {submissionTimeInfo}
-        </div>
-      </TableCell>
-    )
-  }
-}
-
 function HacksCell(props) {
   const {
     successfulCount,
@@ -169,18 +143,4 @@ function HacksCell(props) {
       {cell}
     </TableCell>
   )
-}
-
-function formatSeconds(seconds) {
-  const hour = Math.floor(seconds/3600)
-  const minute = (Math.floor(seconds/60))%60
-
-  const zeroPadded = (number) => {
-    if (number < 10)
-      return `0${number}`
-    else
-      return number
-  }
-
-  return `${zeroPadded(hour)}:${zeroPadded(minute)}`
 }

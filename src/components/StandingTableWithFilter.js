@@ -8,7 +8,8 @@ import Switch from '@material-ui/core/Switch';
 export default function StandingTableWithFilter(props) {
   const { officialStandings, unofficialStandings } = props
 
-  const { contestType, problems } = officialStandings
+  const { contest, problems } = officialStandings
+  const contestType = contest.type
 
   const officialRows = officialStandings.rows
   const officialCountries = officialStandings.countries

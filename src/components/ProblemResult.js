@@ -1,59 +1,75 @@
 import React from 'react'
 import { formatSeconds } from '../utils/timeFormatter'
 
+/*
+type is either CF, ICPC, IOI
+*/
 export default function ProblemResult(props) {
   const {
     result,
-    stacked
+    type
   } = props
 
-  const isAccepted = (result.hasOwnProperty('bestSubmissionTimeSeconds'))
-  const rejectedAttemptCount = result.rejectedAttemptCount
+  if (type === "IOI") {
+    if (!result.hasOwnProperty('bestSubmissionTimeSeconds'))
+      return null
 
-  if (!isAccepted && rejectedAttemptCount === 0)
-    return null
-
-  const rejectedAttemptComponentClass = isAccepted ? "text-green-600" : "text-red-600"
-  const rejectedAttemptText = getRejectedAttemptText(rejectedAttemptCount, isAccepted)
-  const rejectedAttemptComponent =
-    stacked ?
-    <p className={rejectedAttemptComponentClass}>{rejectedAttemptText}</p> :
-    <span className={rejectedAttemptComponentClass}>{rejectedAttemptText}</span>
-
-  if (!isAccepted) {
     return (
       <div className="text-center">
-        {rejectedAttemptComponent}
-      </div>
-    )
-  }
-
-  const bestSubmissionTimeText = formatSeconds(result.bestSubmissionTimeSeconds)
-  const bestSubmissionTimeComponent =
-    stacked ?
-    <p>{bestSubmissionTimeText}</p> :
-    <span>{bestSubmissionTimeText}</span>
-
-  if (stacked) {
-    return (
-      <div className="text-center">
-        {rejectedAttemptComponent}
-        {bestSubmissionTimeComponent}
+        {getPointsComponent(result.points, "IOI")}
+        {getBestSubmissionTimeComponent(result.bestSubmissionTimeSeconds)}
       </div>
     )
   } else {
-    return (
-      <div className="text-center">
-        {bestSubmissionTimeComponent} ({rejectedAttemptComponent})
-      </div>
-    )
+    const isAccepted = result.hasOwnProperty('bestSubmissionTimeSeconds')
+
+    if (!isAccepted && result.rejectedAttemptCount === 0)
+      return null
+
+    if (type === "ICPC") {
+      return (
+        <div className="text-center">
+          {getRejectedAttemptComponent(result.rejectedAttemptCount, isAccepted)}
+          {isAccepted ? getBestSubmissionTimeComponent(result.bestSubmissionTimeSeconds) : null}
+        </div>
+      )
+    } else {
+      return (
+        <div className="text-center">
+          {isAccepted ? getPointsComponent(result.points, "CF") : null}
+          {isAccepted ? getBestSubmissionTimeComponent(result.bestSubmissionTimeSeconds) : null}
+          {isAccepted ? null : getRejectedAttemptComponent(result.rejectedAttemptCount, isAccepted)}
+        </div>
+      )
+    }
   }
 }
 
-function getRejectedAttemptText(count, isAccepted) {
-  if (isAccepted) {
-    return `+${count === 0 ? "" : count}`
+function getPointsComponent(points, type) {
+  if (type === "IOI") {
+    const styleClass = `font-bold ${points === 100 ? "text-green-500" : ""}`
+    return <p className={styleClass}>{points}</p>
+  } else if (type === "CF") {
+    return <p className="font-bold text-green-500">{points}</p>
   } else {
-    return `-${count}`
+    return null
   }
+}
+
+function getRejectedAttemptComponent(rejectedAttemptCount, isAccepted) {
+  let rejectedAttemptText
+  if (isAccepted) {
+    rejectedAttemptText = `+${rejectedAttemptCount === 0 ? "" : rejectedAttemptCount}`
+  } else {
+    rejectedAttemptText = `-${rejectedAttemptCount}`
+  }
+
+  const rejectedAttemptComponentClass = `font-bold ${isAccepted ? "text-green-600" : "text-red-600"}`
+
+  return <p className={rejectedAttemptComponentClass}>{rejectedAttemptText}</p>
+}
+
+function getBestSubmissionTimeComponent(bestSubmissionTimeSeconds) {
+  const bestSubmissionTimeText = formatSeconds(bestSubmissionTimeSeconds)
+  return <p>{bestSubmissionTimeText}</p>
 }
