@@ -1,14 +1,10 @@
 import React from 'react'
-import ProblemsPage from './components/ProblemsPage'
-import { compare } from './features/compare'
+import ComparePage from './components/ComparePage'
 
 function App() {
-  let temp = compare('alvinpiter', 'jauhar.wibisono')
-  temp.then(res => console.log(res))
-
   return (
     <div>
-      <ProblemsPage />
+      <ComparePage />
     </div>
   );
 }

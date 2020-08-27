@@ -4,15 +4,29 @@ import Button from '@material-ui/core/Button'
 import { getCommonContests } from '../features/getCommonContests'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import CommonContests from './CommonContests'
+import { compare } from '../features/compare'
+import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
 
 export default function ComparePage(props) {
   const [userHandle, setUserHandle] = useState(null)
   const [rivalHandle, setRivalHandle] = useState(null)
 
+  const [isLoadingProblems, setIsLoadingProblems] = useState(false)
+  const [problems, setProblems] = useState([])
+
   const [isLoadingCommonContests, setIsLoadingCommonContests] = useState(false)
   const [commonContests, setCommonContests] = useState([])
 
   const onSubmit = () => {
+    const loadProblems = async(user, rival) => {
+      setIsLoadingProblems(true)
+
+      const probs = await compare(user, rival)
+
+      setIsLoadingProblems(false)
+      setProblems(probs)
+    }
+
     const loadCommonContests = async (user, rival) => {
       setIsLoadingCommonContests(true)
 
@@ -22,6 +36,7 @@ export default function ComparePage(props) {
       setCommonContests(contests)
     }
 
+    loadProblems(userHandle, rivalHandle)
     loadCommonContests(userHandle, rivalHandle)
   }
 
@@ -48,6 +63,12 @@ export default function ComparePage(props) {
           Submit
         </Button>
       </div>
+
+      {
+        isLoadingProblems ?
+        <CircularProgress /> :
+        <ProblemTableWithFilterForm problems={problems} />
+      }
 
       {
         isLoadingCommonContests ?
