@@ -8,8 +8,8 @@ import TableCell from '@material-ui/core/TableCell'
 import Paper from '@material-ui/core/Paper'
 import Tooltip from '@material-ui/core/Tooltip'
 import Link from '@material-ui/core/Link'
-import ReactCountryFlag from 'react-country-flag'
 import RatingChange from './RatingChange'
+import Party from './Party'
 
 export default function StandingTable(props) {
   const {
@@ -70,11 +70,13 @@ function StandingTableBody(props) {
         rows.map(row =>
           <TableRow key={row.party.members[0].handle}>
             <TableCell> {row.rank} </TableCell>
-            <PartyCell
-              party={row.party}
-              userInfos={row.userInfos}
-              ratingChange={row.ratingChange}
-            />
+            <TableCell className={row.party.participantType === "CONTESTANT" ? null : "bg-red-200"}>
+              <Party
+                party={row.party}
+                userInfos={row.userInfos}
+                ratingChange={row.ratingChange}
+              />
+            </TableCell>
             <TableCell> {row.acceptedProblemCount} </TableCell>
             <TableCell> {contestType === "ICPC" ? row.penalty : row.points} </TableCell>
             <HacksCell
@@ -112,75 +114,6 @@ function ProblemHeader(props) {
       </div>
     </TableCell>
   )
-}
-
-function CountryFlag(props) {
-  const { countryCode } = props
-  if (countryCode === undefined)
-    return null
-  else
-    return <ReactCountryFlag countryCode={countryCode} />
-}
-
-function PartyCell(props) {
-  const {
-    party,
-    userInfos,
-    ratingChange,
-  } = props
-
-  let teamInfo = null
-  if (party.teamId !== undefined) {
-    teamInfo =
-      <p>
-        <Link href={`https://codeforces.com/team/${party.teamId}`}>
-          {party.teamName}:
-        </Link>
-      </p>
-  }
-
-  let membersInfo = party.members.map((member, index) => {
-    const handle = member.handle
-    const name = constructName(userInfos[index].firstName, userInfos[index].lastName)
-    const countryCode = userInfos[index].countryCode
-    const rating =
-      (ratingChange && ratingChange.oldRating) ||
-      userInfos[index].rating ||
-      0
-
-    const flagComponent = <CountryFlag countryCode={countryCode} />
-
-    const handleComponent =
-      <Link href={`https://codeforces.com/profile/${handle}`} >
-        {getRatedSpan(handle, rating)}
-      </Link>
-
-    const nameComponent = (name === "" ? null : `(${name})`)
-
-    return <p key={handle}>{flagComponent} {handleComponent} {nameComponent}</p>
-  })
-
-  const isOfficial = (party.participantType === "CONTESTANT")
-
-  return (
-    <TableCell className={isOfficial ? null : "bg-red-200"}>
-      <div>
-        {teamInfo}
-        {membersInfo}
-      </div>
-    </TableCell>
-  )
-}
-
-function constructName(firstName, lastName) {
-  let name = ""
-  if (firstName !== undefined)
-    name = name + firstName
-
-  if (lastName !== undefined)
-    name = name + (name.length === 0 ? "" : " ") + lastName
-
-  return name
 }
 
 function ProblemResultCell(props) {
@@ -236,47 +169,6 @@ function HacksCell(props) {
       {cell}
     </TableCell>
   )
-}
-
-function getRatedSpan(text, rating) {
-  if (rating < 3000)
-    return <span className={getRatingColor(rating)}>{text}</span>
-  else
-    return getRatedLgmSpan(text)
-}
-
-function getRatedLgmSpan(text) {
-  text = String(text)
-  return (
-    <span>{text[0]}<span className="text-red-500">{text.substring(1)}</span></span>
-  )
-}
-
-function getRatingChangeSpan(diff) {
-  return <span
-    className={diff >= 0 ? "text-green-500" : "text-red-500"}
-  >
-    {diff >= 0 ? "+" : ""}{diff}
-  </span>
-}
-
-function getRatingColor(rating) {
-  if (rating === 0)
-    return ""
-  else if (rating < 1200)
-    return "text-gray-500"
-  else if (rating < 1400)
-    return "text-green-500"
-  else if (rating < 1600)
-    return "text-teal-500"
-  else if (rating < 1900)
-    return "text-blue-500"
-  else if (rating < 2100)
-    return "text-purple-500"
-  else if (rating < 2400)
-    return "text-orange-500"
-  else if (rating < 3000)
-    return "text-red-500"
 }
 
 function formatSeconds(seconds) {
