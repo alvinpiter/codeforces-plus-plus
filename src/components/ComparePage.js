@@ -18,8 +18,6 @@ export default function ComparePage(props) {
 
       const contests = await getCommonContests(user, rival)
 
-      console.log(contests)
-
       setIsLoadingCommonContests(false)
       setCommonContests(contests)
     }
