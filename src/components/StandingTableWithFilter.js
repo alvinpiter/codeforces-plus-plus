@@ -6,18 +6,18 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
 export default function StandingTableWithFilter(props) {
-  const { officialStandings, unofficialStandings } = props
+  const { standings } = props
 
-  const { contest, problems } = officialStandings
+  const { contest, problems } = standings
+
   const contestType = contest.type
 
-  const officialRows = officialStandings.rows
-  const officialCountries = officialStandings.countries
-
-  const unofficialRows = unofficialStandings.rows
-  const unofficialCountries = unofficialStandings.countries
-
-  const problemStatistics = officialStandings.problemStatistics //This is wrong. Will get back to it later
+  const {
+    officialRows,
+    officialCountries,
+    unofficialRows,
+    unofficialCountries
+  } = standings
 
   const [selectedCountryCodes, setSelectedCountryCodes] = useState([])
   const [filteredRows, setFilteredRows] = useState([])
@@ -83,7 +83,6 @@ export default function StandingTableWithFilter(props) {
       <StandingTable
         contestType={contestType}
         problems={problems}
-        problemStatistics={problemStatistics}
         rows={filteredRows}
         page={page}
         rowsPerPage={rowsPerPage}

@@ -20,7 +20,6 @@ export default function StandingTable(props) {
   const {
     contestType,
     problems,
-    problemStatistics,
     rows,
     page,
     rowsPerPage,
@@ -41,7 +40,6 @@ export default function StandingTable(props) {
         <StandingTableHeader
           contestType={contestType}
           problems={problems}
-          problemStatistics={problemStatistics}
         />
         <StandingTableBody
           contestType={contestType}
@@ -72,7 +70,7 @@ export default function StandingTable(props) {
 
 //#, Who, AC count, Penalty, Hacks, Rating change, problems
 function StandingTableHeader(props) {
-  const { problems, problemStatistics, contestType } = props
+  const { problems, contestType } = props
 
   return (
     <TableHead>
@@ -90,7 +88,6 @@ function StandingTableHeader(props) {
             <ProblemHeader
               key={problem.index}
               problem={problem}
-              problemStatistic={problemStatistics[index]}
             />)
         }
       </TableRow>
@@ -148,10 +145,7 @@ function StandingTableBody(props) {
 }
 
 function ProblemHeader(props) {
-  const { problem, problemStatistic } = props
-
-  const acceptedInfo = <span className="text-green-500">{problemStatistic.accepted}</span>
-  const triedInfo = <span className="text-red-500">{problemStatistic.tried}</span>
+  const { problem } = props
 
   return (
     <TableCell align="center">
@@ -159,7 +153,6 @@ function ProblemHeader(props) {
         <Tooltip title={problem.name}>
           <Link href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}> {problem.index} </Link>
         </Tooltip>
-        <p>{acceptedInfo}/{triedInfo}</p>
       </div>
     </TableCell>
   )
