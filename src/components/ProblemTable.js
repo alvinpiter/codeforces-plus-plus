@@ -21,9 +21,12 @@ import Tooltip from '@material-ui/core/Tooltip'
 import InfoIcon from '@material-ui/icons/Info'
 import TableHead from '@material-ui/core/TableHead'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import TextField from '@material-ui/core/TextField'
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
+    display: "flex",
     flexShrink: 0,
     marginLeft: theme.spacing(2.5),
   },
@@ -51,6 +54,15 @@ function TablePaginationActions(props) {
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 
+  const onSetPage = (event, value) => {
+    onChangePage(event, value)
+  }
+
+  const numPage = Math.ceil(count / rowsPerPage)
+  let pages = []
+  for (let i = 0; i < numPage; i++)
+    pages.push(i)
+
   return (
     <div className={classes.root}>
       <IconButton
@@ -65,9 +77,19 @@ function TablePaginationActions(props) {
         <KeyboardArrowLeft />
       </IconButton>
 
+      <Autocomplete
+        options={pages}
+        getOptionLabel={option => String(option + 1)}
+        renderInput={params => <TextField {...params} variant="outlined" />}
+        style={{ width: 75 }}
+        disableClearable={true}
+        onChange={onSetPage}
+        value={page}
+      />
+
       <IconButton
         onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        disabled={page >= numPage - 1}
         aria-label="next page"
       >
         <KeyboardArrowRight />
@@ -75,7 +97,7 @@ function TablePaginationActions(props) {
 
       <IconButton
         onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        disabled={page >= numPage - 1}
         aria-label="last page"
       >
         <LastPageIcon />
