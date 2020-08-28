@@ -12,14 +12,28 @@ import RatingChange from './RatingChange'
 import Party from './Party'
 import ProblemResult from './ProblemResult'
 import Hacks from './Hacks'
+import TableFooter from '@material-ui/core/TableFooter'
+import TablePagination from '@material-ui/core/TablePagination'
+import TablePaginationActions from './TablePaginationActions'
 
 export default function StandingTable(props) {
   const {
     contestType,
     problems,
     problemStatistics,
-    rows
+    rows,
+    page,
+    rowsPerPage,
+    handleChangePage,
+    handleChangeRowsPerPage
   } = props
+
+  let renderedRows =
+    rowsPerPage > 0 ?
+    rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) :
+    rows
+
+  const numberOfColumns = (contestType === "IOI" ? 5 : 6) + problems.length
 
   return (
     <TableContainer component={Paper}>
@@ -31,8 +45,26 @@ export default function StandingTable(props) {
         />
         <StandingTableBody
           contestType={contestType}
-          rows={rows}
+          rows={renderedRows}
         />
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[50, 100, 200, { label: 'All', value: -1 }]}
+              colSpan={numberOfColumns}
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: { 'aria-label': 'rows per page' },
+                native: true
+              }}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
       </Table>
     </TableContainer>
   )
@@ -68,7 +100,7 @@ function StandingTableHeader(props) {
 
 function StandingTableBody(props) {
   const { rows, contestType } = props
-  console.log(rows)
+
   return (
     <TableBody>
       {

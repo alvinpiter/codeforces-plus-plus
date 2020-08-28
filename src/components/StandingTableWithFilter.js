@@ -22,6 +22,17 @@ export default function StandingTableWithFilter(props) {
   const [selectedCountryCodes, setSelectedCountryCodes] = useState([])
   const [filteredRows, setFilteredRows] = useState([])
   const [showUnofficial, setShowUnofficial] = useState(false)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(50)
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
   useEffect(() => {
     setFilteredRows(officialRows)
@@ -42,6 +53,8 @@ export default function StandingTableWithFilter(props) {
   }
 
   const onApplyFilter = () => {
+    setPage(0)
+
     const filterParameters = {}
     if (selectedCountryCodes.length > 0)
       filterParameters.countryCodes = selectedCountryCodes
@@ -72,6 +85,10 @@ export default function StandingTableWithFilter(props) {
         problems={problems}
         problemStatistics={problemStatistics}
         rows={filteredRows}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        handleChangePage={handleChangePage}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
       />
     </div>
   )
