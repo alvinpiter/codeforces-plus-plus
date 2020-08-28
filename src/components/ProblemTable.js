@@ -97,11 +97,31 @@ const useStyles2 = makeStyles({
   },
 });
 
-function getComparator(field, order) {
-  if (order === "asc")
-    return (a, b) => a[field] - b[field]
-  else
-    return (a, b) => -(a[field] - b[field])
+function getProblemComparator(field, order) {
+  if (field === 'id') {
+    const ascComparator = (a, b) => {
+      if (a.contestID != b.contestID)
+        return a.contestID - b.contestID
+
+      if (a.index < b.index)
+        return -1
+      else
+        return 1
+    }
+
+    if (order === "asc")
+      return (a, b) => ascComparator(a, b)
+    else
+      return (a, b) => -ascComparator(a, b)
+  } else {
+    //field is either rating or solvedCount
+    const ascComparator = (a, b) => a[field] - b[field]
+
+    if (order === "asc")
+      return (a, b) => ascComparator(a, b)
+    else
+      return (a, b) => -ascComparator(a, b)
+  }
 }
 
 const tableHeaders = [
@@ -195,7 +215,7 @@ export default function ProblemTable({rows}) {
     }
 
     let renderedRows = rows.slice()
-    renderedRows.sort(getComparator(orderBy, order))
+    renderedRows.sort(getProblemComparator(orderBy, order))
 
     return (
       <div>
