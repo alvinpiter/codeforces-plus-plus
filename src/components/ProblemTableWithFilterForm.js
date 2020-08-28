@@ -83,12 +83,12 @@ export default function ProblemTableWithFilterForm(props) {
   }
 
   return (
-    <div className="flex">
-      <div className="w-1/2">
+    <div className="flex space-x-4">
+      <div className="w-2/3">
         <ProblemTable rows={filteredProblems} />
       </div>
 
-      <div className="w-1/2">
+      <div className="w-1/3">
         <ProblemFilterForm
           problemDomain={problemDomain}
           minRating={minRating}
