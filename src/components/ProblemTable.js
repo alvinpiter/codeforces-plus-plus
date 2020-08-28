@@ -100,7 +100,7 @@ const useStyles2 = makeStyles({
 function getProblemComparator(field, order) {
   if (field === 'id') {
     const ascComparator = (a, b) => {
-      if (a.contestID != b.contestID)
+      if (a.contestID !== b.contestID)
         return a.contestID - b.contestID
 
       if (a.index < b.index)
@@ -124,22 +124,14 @@ function getProblemComparator(field, order) {
   }
 }
 
-const tableHeaders = [
-  {field: 'id', name: 'ID', sortable: true},
-  {field: 'name', name: 'Name', sortable: false},
-  {field: 'rating', name: 'Rating', sortable: true},
-  {field: 'solvedCount', name: 'SolvedCount', sortable: true},
-  {field: 'tags', name: 'Tags', sortable: false}
-]
-
 function ProblemTableHeader(props) {
-  const { order, orderBy, onSortRequest } = props
+  const { headers, order, orderBy, onSortRequest } = props
 
   return (
     <TableHead>
       <TableRow>
         {
-          tableHeaders.map(header => {
+          headers.map(header => {
             if (header.sortable) {
               return (
                 <TableCell key={header.field}>
@@ -199,6 +191,14 @@ export default function ProblemTable({rows}) {
     }
   }
 
+  const headers = [
+    {field: 'id', name: 'ID', sortable: true},
+    {field: 'name', name: 'Name', sortable: false},
+    {field: 'rating', name: 'Rating', sortable: true},
+    {field: 'solvedCount', name: 'SolvedCount', sortable: true},
+    {field: 'tags', name: 'Tags', sortable: false}
+  ]
+
   if (rows.length === 0) {
     return (
       <div className="bg-yellow-300 p-2 rounded-md text-center">
@@ -228,6 +228,7 @@ export default function ProblemTable({rows}) {
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="custom pagination table" size="small">
             <ProblemTableHeader
+              headers={headers}
               order={order}
               orderBy={orderBy}
               onSortRequest={onSortRequest}
