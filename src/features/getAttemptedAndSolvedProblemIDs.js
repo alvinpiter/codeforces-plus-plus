@@ -1,28 +1,8 @@
+import { getNormalizedSubmissions } from './getNormalizedSubmissions'
 
-/*
-Normalized submission is an object with following structure:
-{
-  verdict: "OK",
-  problemID: 2,
-  submittedProblemID: 3
-}
+export async function getAttemptedAndSolvedProblemIDs(handle) {
+  const submissions = await getNormalizedSubmissions(handle)
 
-Given an array of normalized submissions, return an object with following structure:
-{
-  solvedProblemIDs: [
-    {id: 1, submittedID: 2},
-    ...
-  ],
-  attemptedProblemIDs: [
-    {id: 3, submittedID: 4},
-    ...
-  ]
-}
-
-All ids in solvedProblemIDs and attemptedProblemIDs must be unique.
-Prioritize object whose id and submittedID is the same
-*/
-export function filterNormalizedSubmissions(submissions) {
   let solvedIDsMap = new Map() //map id to submittedID
   for (let sub of submissions) {
     if (sub.verdict === "OK") {

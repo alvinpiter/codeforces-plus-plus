@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
-import { getUserProblemIDs } from '../features/getUserProblemIDs'
+import { getAttemptedAndSolvedProblemIDs } from '../features/getAttemptedAndSolvedProblemIDs'
+import { enhanceProblems } from '../features/enhanceProblems'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [allProblems, setAllProblems] = useState([])
-  const [userProblemIDs, setUserProblemIDs] = useState(null)
+  const [attemptedAndSolvedProblemIDs, setAttemptedAndSolvedProblemIDs] = useState(null)
 
   useEffect(() => {
     const getAllProblems = async () => {
@@ -27,47 +28,16 @@ export default function ProblemsPage() {
     const getProblems = async (handle) => {
       setIsLoading(true)
 
-      let userProblemIDs = await getUserProblemIDs(handle, allProblems)
+      let attemptedAndSolvedProblemIDs = await getAttemptedAndSolvedProblemIDs(handle)
 
       setIsLoading(false)
-      setUserProblemIDs(userProblemIDs)
+      setAttemptedAndSolvedProblemIDs(attemptedAndSolvedProblemIDs)
     }
 
     getProblems(handle)
   }
 
-  const attemptedProblemsMap = new Map()
-  const solvedProblemsMap = new Map()
-
-  if (userProblemIDs !== null) {
-    for (let { id, submittedID } of userProblemIDs.attemptedProblemIDs)
-      attemptedProblemsMap.set(id, submittedID)
-
-    for (let { id, submittedID } of userProblemIDs.solvedProblemIDs)
-      solvedProblemsMap.set(id, submittedID)
-  }
-
-  let enhancedProblems = []
-  for (let problem of allProblems) {
-    let submittedID, state
-
-    if (attemptedProblemsMap.has(problem.id)) {
-      submittedID = attemptedProblemsMap.get(problem.id)
-      state = -1
-    } else if (solvedProblemsMap.has(problem.id)) {
-      submittedID = solvedProblemsMap.get(problem.id)
-      state = 1
-    } else {
-      submittedID = null
-      state = 0
-    }
-
-    enhancedProblems.push({
-      ...problem,
-      submittedID: submittedID,
-      state: state
-    })
-  }
+  const enhancedProblems = enhanceProblems(allProblems, attemptedAndSolvedProblemIDs)
 
   return (
     <div>

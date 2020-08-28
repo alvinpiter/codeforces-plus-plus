@@ -1,29 +1,75 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import { getCommonContests } from '../features/getCommonContests'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import CommonContests from './CommonContests'
+import { compare } from '../features/compare'
+import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
 
 export default function ComparePage(props) {
-  const [userHandle, setUserHandle] = useState(null)
-  const [rivalHandle, setRivalHandle] = useState(null)
+  const [userHandleValue, setUserHandleValue] = useState("")
+  const [rivalHandleValue, setRivalHandleValue] = useState("")
+
+  const [isLoadingProblems, setIsLoadingProblems] = useState(false)
+  const [problems, setProblems] = useState([])
+
+  const [handlePair, setHandlePair] = useState({user: "", rival: ""})
 
   const [isLoadingCommonContests, setIsLoadingCommonContests] = useState(false)
   const [commonContests, setCommonContests] = useState([])
 
+  const [displaySwitch, setDisplaySwitch] = useState(false)
+
   const onSubmit = () => {
-    const loadCommonContests = async (user, rival) => {
-      setIsLoadingCommonContests(true)
-
-      const contests = await getCommonContests(user, rival)
-
-      setIsLoadingCommonContests(false)
-      setCommonContests(contests)
-    }
-
-    loadCommonContests(userHandle, rivalHandle)
+    setHandlePair({
+      user: userHandleValue,
+      rival: rivalHandleValue
+    })
   }
+
+  const onSwitch = () => {
+    setHandlePair({
+      user: rivalHandleValue,
+      rival: userHandleValue
+    })
+
+    const temp = rivalHandleValue
+    setRivalHandleValue(userHandleValue)
+    setUserHandleValue(temp)
+  }
+
+  useEffect(() => {
+    if (handlePair.user !== "" && handlePair.rival !== "") {
+      const loadProblems = async(user, rival) => {
+        setIsLoadingProblems(true)
+
+        const probs = await compare(user, rival)
+
+        setIsLoadingProblems(false)
+        setProblems(probs)
+      }
+
+      const loadCommonContests = async (user, rival) => {
+        setIsLoadingCommonContests(true)
+
+        const contests = await getCommonContests(user, rival)
+
+        setIsLoadingCommonContests(false)
+        setCommonContests(contests)
+      }
+
+      setDisplaySwitch(false)
+
+      const { user, rival } = handlePair
+
+      loadProblems(user, rival)
+      loadCommonContests(user, rival)
+
+      setDisplaySwitch(true)
+    } else
+      return undefined
+  }, [handlePair])
 
   return (
     <div>
@@ -31,13 +77,15 @@ export default function ComparePage(props) {
         <TextField
           label="Handle"
           placeholder="Example: tourist"
-          onChange={e => setUserHandle(e.target.value)}
+          onChange={e => setUserHandleValue(e.target.value)}
+          value={userHandleValue}
         />
 
         <TextField
           label="Rival handle"
           placeholder="Example: Petr"
-          onChange={e => setRivalHandle(e.target.value)}
+          onChange={e => setRivalHandleValue(e.target.value)}
+          value={rivalHandleValue}
         />
 
         <Button
@@ -47,14 +95,30 @@ export default function ComparePage(props) {
         >
           Submit
         </Button>
+
+        {
+          displaySwitch ?
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onSwitch}
+          > Switch </Button> :
+          null
+        }
       </div>
+
+      {
+        isLoadingProblems ?
+        <CircularProgress /> :
+        <ProblemTableWithFilterForm problems={problems} />
+      }
 
       {
         isLoadingCommonContests ?
         <CircularProgress /> :
         <CommonContests
-          firstHandle={userHandle}
-          secondHandle={rivalHandle}
+          firstHandle={userHandleValue}
+          secondHandle={rivalHandleValue}
           commonContests={commonContests}
         />
       }
