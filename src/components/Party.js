@@ -24,10 +24,14 @@ export default function Party(props) {
     const handle = member.handle
     const name = constructFullName(userInfos[index].firstName, userInfos[index].lastName)
     const countryCode = userInfos[index].countryCode
-    const rating =
-      (ratingChange && ratingChange.oldRating) ||
-      userInfos[index].rating ||
-      0
+
+    let rating
+    if (ratingChange)
+      rating = ratingChange.oldRating
+    else if (userInfos[index].rating)
+      rating = userInfos[index].rating
+    else
+      rating = 0
 
     const flagComponent = <CountryFlag countryCode={countryCode} />
 

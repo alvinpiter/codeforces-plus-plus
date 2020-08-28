@@ -68,6 +68,7 @@ function StandingTableHeader(props) {
 
 function StandingTableBody(props) {
   const { rows, contestType } = props
+  console.log(rows)
   return (
     <TableBody>
       {
@@ -94,7 +95,11 @@ function StandingTableBody(props) {
               />
             </TableCell>
             <TableCell>
-              <RatingChange ratingChange={row.ratingChange} />
+              {
+                row.party.participantType === "CONTESTANT" ?
+                <RatingChange ratingChange={row.ratingChange} /> :
+                null
+              }
             </TableCell>
             {
               row.problemResults.map(result =>
