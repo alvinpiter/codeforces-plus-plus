@@ -131,8 +131,8 @@ function StandingTableBody(props) {
               }
             </TableCell>
             {
-              row.problemResults.map(result =>
-                <TableCell>
+              row.problemResults.map((result, index) =>
+                <TableCell key={index}>
                   <ProblemResult result={result} type={contestType} />
                 </TableCell>
               )

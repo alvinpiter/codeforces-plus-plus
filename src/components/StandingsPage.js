@@ -17,7 +17,6 @@ export default function StandingsPage() {
       setIsLoadingStandings(true)
 
       const res = await aggregateStandings(contest.id)
-      console.log(res)
 
       setIsLoadingStandings(false)
       setStandings(res)
