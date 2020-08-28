@@ -160,9 +160,9 @@ function ProblemTableHeader(props) {
 
 export default function ProblemTable({rows}) {
   const classes = useStyles2();
-  const [hideProblemTags, setHideProblemTags] = React.useState(false)
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [hideProblemTags, setHideProblemTags] = useState(false)
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc')
   const [orderBy, setOrderBy] = useState('id')
 
