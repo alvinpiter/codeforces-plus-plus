@@ -77,25 +77,16 @@ function ProblemTableHeader(props) {
   )
 }
 
-export default function ProblemTable({rows}) {
+export default function ProblemTable(props) {
+  const { rows, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = props
+
   const [hideProblemTags, setHideProblemTags] = useState(false)
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc')
   const [orderBy, setOrderBy] = useState('id')
 
   const handleHideProblemTags = (event) => {
     setHideProblemTags(!hideProblemTags)
   }
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   const onSortRequest = (field) => {
     if (field === orderBy) {

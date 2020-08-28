@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import TableContainer from '@material-ui/core/TableContainer'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
@@ -21,20 +21,12 @@ export default function StandingTable(props) {
     contestType,
     problems,
     problemStatistics,
-    rows
+    rows,
+    page,
+    rowsPerPage,
+    handleChangePage,
+    handleChangeRowsPerPage
   } = props
-
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(50)
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
 
   let renderedRows =
     rowsPerPage > 0 ?
