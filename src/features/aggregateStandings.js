@@ -113,11 +113,11 @@ async function getUserInfoMap(handles) {
   for (let handle of handles) {
     currentHandles.push(handle)
 
-    if (currentHandles.length === 200) {
+    if (currentHandles.length === 400) {
       userInfoPromises.push(getUserInfos(currentHandles))
       currentHandles = []
 
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 300))
     }
   }
 
