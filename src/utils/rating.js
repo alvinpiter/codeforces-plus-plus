@@ -19,7 +19,7 @@ function ratedLGMFormat(text) {
 
 function getColorClass(rating) {
   if (rating === 0)
-    return ""
+    return "text-black"
   else if (rating < 1200)
     return "text-gray-500"
   else if (rating < 1400)
