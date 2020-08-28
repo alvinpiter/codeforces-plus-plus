@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,11 +7,6 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
 import Link from '@material-ui/core/Link';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -21,103 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import InfoIcon from '@material-ui/icons/Info'
 import TableHead from '@material-ui/core/TableHead'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import TextField from '@material-ui/core/TextField'
-
-const useStyles1 = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
-  },
-}));
-
-function TablePaginationActions(props) {
-  const theme = useTheme()
-  const classes = useStyles1()
-
-  const { count, page, rowsPerPage, onChangePage } = props;
-
-  const handleFirstPageButtonClick = (event) => {
-    onChangePage(event, 0);
-  };
-
-  const handleBackButtonClick = (event) => {
-    onChangePage(event, page - 1);
-  };
-
-  const handleNextButtonClick = (event) => {
-    onChangePage(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event) => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  const onSetPage = (event, value) => {
-    onChangePage(event, value)
-  }
-
-  const numPage = Math.ceil(count / rowsPerPage)
-  let pages = []
-  for (let i = 0; i < numPage; i++)
-    pages.push(i)
-
-  return (
-    <div className={classes.root}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        <FirstPageIcon />
-      </IconButton>
-
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-        <KeyboardArrowLeft />
-      </IconButton>
-
-      <Autocomplete
-        options={pages}
-        getOptionLabel={option => String(option + 1)}
-        renderInput={params => <TextField {...params} variant="outlined" />}
-        style={{ width: 75 }}
-        disableClearable={true}
-        onChange={onSetPage}
-        value={page}
-      />
-
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= numPage - 1}
-        aria-label="next page"
-      >
-        <KeyboardArrowRight />
-      </IconButton>
-
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= numPage - 1}
-        aria-label="last page"
-      >
-        <LastPageIcon />
-      </IconButton>
-    </div>
-  );
-}
-
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-});
+import TablePaginationActions from './TablePaginationActions'
 
 function getProblemComparator(field, order) {
   if (field === 'id') {
@@ -181,7 +78,6 @@ function ProblemTableHeader(props) {
 }
 
 export default function ProblemTable({rows}) {
-  const classes = useStyles2();
   const [hideProblemTags, setHideProblemTags] = useState(false)
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -248,7 +144,7 @@ export default function ProblemTable({rows}) {
           />
         </div>
         <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="custom pagination table" size="small">
+          <Table aria-label="custom pagination table" size="small">
             <ProblemTableHeader
               headers={headers}
               order={order}
