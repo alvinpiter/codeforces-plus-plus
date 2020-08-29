@@ -4,6 +4,7 @@ import {
   getContestRatingChanges
 } from '../api/codeforces'
 import { getCountryCode } from '../utils/MyCountryList'
+import { constructFullName } from '../utils/constructFullName'
 
 /*
 Return object:
@@ -171,15 +172,4 @@ async function getUserInfoMap(handles) {
   }
 
   return userInfoMap
-}
-
-function constructFullName(firstName, lastName) {
-  let name = ""
-  if (firstName !== undefined)
-    name = name + firstName
-
-  if (lastName !== undefined)
-    name = name + (name.length === 0 ? "" : " ") + lastName
-
-  return name
 }

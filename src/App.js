@@ -1,10 +1,10 @@
 import React from 'react'
-import ProblemsPage from './components/ProblemsPage'
+import StandingsPage from './components/StandingsPage'
 
 function App() {
   return (
     <div>
-      <ProblemsPage />
+      <StandingsPage />
     </div>
   );
 }
