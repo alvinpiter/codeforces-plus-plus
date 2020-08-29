@@ -45,7 +45,7 @@ export async function aggregateStandings(contestID) {
 
   const userInfoMap = await getUserInfoMap(Array.from(handlesSet))
 
-  //add userInfos and ratingChange to each row
+  //add acceptedProblemCount, userInfos, atingChange to each row
   const enhanceRows = (rows) => {
     for (let row of rows) {
       row.ratingChange = userRatingChangeMap.get(row.party.members[0].handle)
@@ -55,6 +55,14 @@ export async function aggregateStandings(contestID) {
         userInfos.push(userInfoMap.get(handle))
 
       row.userInfos = userInfos
+
+      let acceptedProblemCount = 0
+      for (let result of row.problemResults) {
+        if (result.hasOwnProperty('bestSubmissionTimeSeconds'))
+          acceptedProblemCount += 1
+      }
+
+      row.acceptedProblemCount = acceptedProblemCount
     }
   }
 
