@@ -5,8 +5,20 @@ import {
 } from '../api/codeforces'
 import { getCountryCode } from '../utils/MyCountryList'
 
-export async function aggregateStandings(contestID, params) {
-  let standings = await getContestStandings(contestID, params)
+/*
+Return object:
+{
+  contest: {},
+  problems: {},
+  officialRows: [],
+  officialCountries: [],
+  unofficialRows: [],
+  unofficialCountries: []
+}
+*/
+export async function aggregateStandings(contestID) {
+  let officialStandingsPromise = getContestStandings(contestID)
+  let unofficialStandingsPromise = getContestStandings(contestID, { showUnofficial: true })
 
   let contestRatingChanges
   try {
@@ -15,60 +27,68 @@ export async function aggregateStandings(contestID, params) {
     contestRatingChanges = []
   }
 
+  const officialStandings = await officialStandingsPromise
+  const unofficialStandings = await unofficialStandingsPromise
+
   const userRatingChangeMap = getUserRatingChangeMap(contestRatingChanges)
-  const userInfoMap = await getUserInfoMap(standings.rows)
 
-  let problemStatistics = []
-  for (let i = 0; i < standings.problems.length; i++)
-    problemStatistics.push({ accepted: 0, tried: 0 })
-
-  let countriesSet = new Set()
-
-  let rankListRows = []
-  for (let row of standings.rows) {
-    const handle = row.party.members[0].handle
-
-    if (userRatingChangeMap.has(handle))
-      row.ratingChange = userRatingChangeMap.get(handle)
-
-    let userInfos = []
-    for (let member of row.party.members) {
-      userInfos.push(userInfoMap.get(member.handle))
-    }
-
-    if (userInfos.length > 0 && userInfos[0].country !== undefined)
-      countriesSet.add(userInfos[0].country)
-
-    row.userInfos = userInfos
-
-    let acceptedProblemCount = 0
-    row.problemResults.forEach((result, index) => {
-      problemStatistics[index].tried += result.rejectedAttemptCount
-
-      if (result.bestSubmissionTimeSeconds !== undefined) {
-        acceptedProblemCount += 1
-        problemStatistics[index].accepted += 1
-      }
-    })
-
-    row.acceptedProblemCount = acceptedProblemCount
-
-    rankListRows.push(row)
+  let handlesSet = new Set()
+  for (let row of (await officialStandings).rows) {
+    for (let { handle } of row.party.members)
+      handlesSet.add(handle)
   }
 
-  standings.problemStatistics = problemStatistics
-  standings.rows = rankListRows
+  for (let row of (await unofficialStandings).rows) {
+    for (let { handle } of row.party.members)
+      handlesSet.add(handle)
+  }
 
-  const sortedCountries = Array.from(countriesSet).sort().map(name => {
-    return {
-      name: name,
-      code: getCountryCode(name)
+  const userInfoMap = await getUserInfoMap(Array.from(handlesSet))
+
+  //add userInfos and ratingChange to each row
+  const enhanceRows = (rows) => {
+    for (let row of rows) {
+      row.ratingChange = userRatingChangeMap.get(row.party.members[0].handle)
+
+      let userInfos = []
+      for (let { handle } of row.party.members)
+        userInfos.push(userInfoMap.get(handle))
+
+      row.userInfos = userInfos
     }
-  })
+  }
 
-  standings.countries = sortedCountries
+  enhanceRows(officialStandings.rows)
+  enhanceRows(unofficialStandings.rows)
 
-  return standings
+  const getCountries = (rows) => {
+    const countries = new Set()
+    for (let row of rows) {
+      for (let userInfo of row.userInfos) {
+        if (userInfo !== undefined && userInfo.country !== undefined)
+          countries.add(userInfo.country)
+      }
+    }
+
+    return Array.from(countries).sort().map(name => {
+      return {
+        name: name,
+        code: getCountryCode(name)
+      }
+    })
+  }
+
+  const officialCountries = getCountries(officialStandings.rows)
+  const unofficialCountries = getCountries(unofficialStandings.rows)
+
+  return {
+    contest: officialStandings.contest,
+    problems: officialStandings.problems,
+    officialRows: officialStandings.rows,
+    officialCountries: officialCountries,
+    unofficialRows: unofficialStandings.rows,
+    unofficialCountries: unofficialCountries
+  }
 }
 
 function getUserRatingChangeMap(contestRatingChanges) {
@@ -86,24 +106,18 @@ function getUserRatingChangeMap(contestRatingChanges) {
   return userRatingChangeMap
 }
 
-async function getUserInfoMap(rankListRows) {
-  let handles = []
-  for (let row of rankListRows) {
-    for (let { handle } of row.party.members)
-      handles.push(handle)
-  }
-
+async function getUserInfoMap(handles) {
   //call user.info API in batch
   let userInfoPromises = []
   let currentHandles = []
   for (let handle of handles) {
     currentHandles.push(handle)
 
-    if (currentHandles.length === 200) {
+    if (currentHandles.length === 400) {
       userInfoPromises.push(getUserInfos(currentHandles))
       currentHandles = []
 
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 300))
     }
   }
 

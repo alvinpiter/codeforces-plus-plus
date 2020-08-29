@@ -10,19 +10,16 @@ export default function StandingsPage() {
   let [contests, setContests] = useState([])
 
   let [isLoadingStandings, setIsLoadingStandings] = useState(false)
-  let [officialStandings, setOfficialStandings] = useState(null)
-  let [unofficialStandings, setUnofficialStandings] = useState(null)
+  let [standings, setStandings] = useState(null)
 
   const onPicked = (contest) => {
     const loadStandings = async (contest) => {
       setIsLoadingStandings(true)
 
-      const officialStandings = await aggregateStandings(contest.id)
-      const unofficialStandings = await aggregateStandings(contest.id, { showUnofficial: true })
+      const res = await aggregateStandings(contest.id)
 
       setIsLoadingStandings(false)
-      setOfficialStandings(officialStandings)
-      setUnofficialStandings(unofficialStandings)
+      setStandings(res)
     }
 
     loadStandings(contest)
@@ -49,12 +46,9 @@ export default function StandingsPage() {
       {
         isLoadingStandings ?
         <CircularProgress /> :
-        (officialStandings === null || unofficialStandings === null ?
+        (standings === null ?
           null :
-          <StandingTableWithFilter
-            officialStandings={officialStandings}
-            unofficialStandings={unofficialStandings}
-          />
+          <StandingTableWithFilter standings={standings} />
         )
       }
     </div>
