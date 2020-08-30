@@ -1,5 +1,6 @@
 import React from 'react'
 import { ratedFormat } from '../utils/rating'
+import { constructFullName } from '../utils/constructFullName'
 import ReactCountryFlag from 'react-country-flag'
 import Link from '@material-ui/core/Link'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -65,15 +66,4 @@ function CountryFlag(props) {
         <span><ReactCountryFlag countryCode={countryCode} /></span>
       </Tooltip>
     )
-}
-
-function constructFullName(firstName, lastName) {
-  let name = ""
-  if (firstName !== undefined)
-    name = name + firstName
-
-  if (lastName !== undefined)
-    name = name + (name.length === 0 ? "" : " ") + lastName
-
-  return name
 }

@@ -4,6 +4,7 @@ import {
   getContestRatingChanges
 } from '../api/codeforces'
 import { getCountryCode } from '../utils/MyCountryList'
+import { constructFullName } from '../utils/constructFullName'
 
 /*
 Return object:
@@ -32,18 +33,31 @@ export async function aggregateStandings(contestID) {
 
   const userRatingChangeMap = getUserRatingChangeMap(contestRatingChanges)
 
-  let handlesSet = new Set()
+  let allHandlesSet = new Set()
+
+  let officialHandlesSet = new Set()
   for (let row of (await officialStandings).rows) {
-    for (let { handle } of row.party.members)
-      handlesSet.add(handle)
+    for (let { handle } of row.party.members) {
+      allHandlesSet.add(handle)
+      officialHandlesSet.add(handle)
+    }
   }
 
+  let unofficialHandlesSet = new Set()
   for (let row of (await unofficialStandings).rows) {
-    for (let { handle } of row.party.members)
-      handlesSet.add(handle)
+    for (let { handle } of row.party.members) {
+      allHandlesSet.add(handle)
+      unofficialHandlesSet.add(handle)
+    }
   }
 
-  const userInfoMap = await getUserInfoMap(Array.from(handlesSet))
+  let officialHandles = Array.from(officialHandlesSet)
+  let unofficialHandles = Array.from(unofficialHandlesSet)
+
+  officialHandles.sort()
+  unofficialHandles.sort()
+
+  const userInfoMap = await getUserInfoMap(Array.from(allHandlesSet))
 
   //add acceptedProblemCount, userInfos, atingChange to each row
   const enhanceRows = (rows) => {
@@ -89,12 +103,27 @@ export async function aggregateStandings(contestID) {
   const officialCountries = getCountries(officialStandings.rows)
   const unofficialCountries = getCountries(unofficialStandings.rows)
 
+  const getHandleAndNamePairs = (handles) => {
+    return handles.map(handle => {
+      const info = userInfoMap.get(handle)
+      return {
+        handle: handle,
+        name: constructFullName(info.firstName, info.lastName)
+      }
+    })
+  }
+
+  const officialUsers = getHandleAndNamePairs(officialHandles)
+  const unofficialUsers = getHandleAndNamePairs(unofficialHandles)
+
   return {
     contest: officialStandings.contest,
     problems: officialStandings.problems,
     officialRows: officialStandings.rows,
+    officialUsers: officialUsers,
     officialCountries: officialCountries,
     unofficialRows: unofficialStandings.rows,
+    unofficialUsers: unofficialUsers,
     unofficialCountries: unofficialCountries
   }
 }

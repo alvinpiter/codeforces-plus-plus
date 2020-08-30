@@ -2,24 +2,29 @@
 /*
 Supported filterParameters:
 {
+  handles: ["alvinpiter", "tourist"],
   countryCodes: ["ID", "JP"]
 }
 */
 export function filterRanklistRows(rows, filterParameters) {
-  if (filterParameters.hasOwnProperty('countryCodes'))
-    rows = filterRanklistRowsByCountryCodes(rows, filterParameters.countryCodes)
+  let handlesSet = new Set()
+  if (filterParameters.hasOwnProperty('handles')) {
+    for (let handle of filterParameters.handles)
+      handlesSet.add(handle)
+  }
 
-  return rows
-}
-
-function filterRanklistRowsByCountryCodes(rows, countryCodes) {
   let countryCodesSet = new Set()
-  for (let code of countryCodes)
-    countryCodesSet.add(code)
+  if (filterParameters.hasOwnProperty('countryCodes')) {
+    for (let code of filterParameters.countryCodes)
+      countryCodesSet.add(code)
+  }
 
   return rows.filter(row => {
     if (row.hasOwnProperty('userInfos')) {
       for (let userInfo of row.userInfos) {
+        if (handlesSet.has(userInfo.handle))
+          return true
+
         if (countryCodesSet.has(userInfo.countryCode))
           return true
       }
