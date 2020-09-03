@@ -4,6 +4,7 @@ import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
 import { getAttemptedAndSolvedProblemIDs } from '../features/getAttemptedAndSolvedProblemIDs'
 import { enhanceProblems } from '../features/enhanceProblems'
+import NavBar from './NavBar'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
@@ -41,6 +42,7 @@ export default function ProblemsPage() {
 
   return (
     <div>
+      <NavBar activePageIndex={0}/>
       <FormGroup row={true}>
         <TextField
           label="Handle"

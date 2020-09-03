@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import CommonContests from './CommonContests'
 import { compare } from '../features/compare'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
+import NavBar from './NavBar'
 
 export default function ComparePage(props) {
   const [userHandleValue, setUserHandleValue] = useState("")
@@ -73,6 +74,7 @@ export default function ComparePage(props) {
 
   return (
     <div>
+      <NavBar activePageIndex={1}/>
       <div className="flex space-x-2">
         <TextField
           label="Handle"
