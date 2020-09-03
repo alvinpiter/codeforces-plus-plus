@@ -4,6 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { getPastContestList } from '../features/getPastContestList'
 import { aggregateStandings } from '../features/aggregateStandings'
 import StandingTableWithFilter from './StandingTableWithFilter'
+import NavBar from './NavBar'
 
 export default function StandingsPage() {
   let [isLoadingContests, setIsLoadingContests] = useState(true)
@@ -38,6 +39,7 @@ export default function StandingsPage() {
 
   return (
     <div>
+      <NavBar activePageIndex={2}/>
       {
         isLoadingContests ?
         <CircularProgress /> :
