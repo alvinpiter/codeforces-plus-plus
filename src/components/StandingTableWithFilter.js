@@ -14,12 +14,15 @@ export default function StandingTableWithFilter(props) {
 
   const {
     officialRows,
+    officialUsers,
     officialCountries,
     unofficialRows,
+    unofficialUsers,
     unofficialCountries
   } = standings
 
   const [selectedCountryCodes, setSelectedCountryCodes] = useState([])
+  const [selectedHandles, setSelectedHandles] = useState([])
   const [filteredRows, setFilteredRows] = useState([])
   const [showUnofficial, setShowUnofficial] = useState(false)
   const [page, setPage] = useState(0)
@@ -42,6 +45,10 @@ export default function StandingTableWithFilter(props) {
     setSelectedCountryCodes(value.map(v => v.code))
   }
 
+  const onUsersChange = (event, value) => {
+    setSelectedHandles(value.map(v => v.handle))
+  }
+
   const onShowUnofficialToggle = () => {
     if (showUnofficial === true) {
       setShowUnofficial(false)
@@ -56,6 +63,9 @@ export default function StandingTableWithFilter(props) {
     setPage(0)
 
     const filterParameters = {}
+    if (selectedHandles.length > 0)
+      filterParameters.handles = selectedHandles
+
     if (selectedCountryCodes.length > 0)
       filterParameters.countryCodes = selectedCountryCodes
 
@@ -69,7 +79,9 @@ export default function StandingTableWithFilter(props) {
     <div>
       <StandingFilter
         countries={showUnofficial ? unofficialCountries : officialCountries}
+        users={showUnofficial ? unofficialUsers : officialUsers}
         onCountriesChange={onCountriesChange}
+        onUsersChange={onUsersChange}
         onApplyFilter={onApplyFilter}
       />
 

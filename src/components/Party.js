@@ -1,7 +1,9 @@
 import React from 'react'
 import { ratedFormat } from '../utils/rating'
+import { constructFullName } from '../utils/constructFullName'
 import ReactCountryFlag from 'react-country-flag'
 import Link from '@material-ui/core/Link'
+import Tooltip from '@material-ui/core/Tooltip'
 
 export default function Party(props) {
   const {
@@ -23,6 +25,7 @@ export default function Party(props) {
   let membersComponent = party.members.map((member, index) => {
     const handle = member.handle
     const name = constructFullName(userInfos[index].firstName, userInfos[index].lastName)
+    const country = userInfos[index].country
     const countryCode = userInfos[index].countryCode
 
     let rating
@@ -33,7 +36,7 @@ export default function Party(props) {
     else
       rating = 0
 
-    const flagComponent = <CountryFlag countryCode={countryCode} />
+    const flagComponent = <CountryFlag country={country} countryCode={countryCode} />
 
     const handleComponent =
       <Link href={`https://codeforces.com/profile/${handle}`} >
@@ -54,20 +57,13 @@ export default function Party(props) {
 }
 
 function CountryFlag(props) {
-  const { countryCode } = props
+  const { country, countryCode } = props
   if (countryCode === undefined)
     return null
   else
-    return <ReactCountryFlag countryCode={countryCode} />
-}
-
-function constructFullName(firstName, lastName) {
-  let name = ""
-  if (firstName !== undefined)
-    name = name + firstName
-
-  if (lastName !== undefined)
-    name = name + (name.length === 0 ? "" : " ") + lastName
-
-  return name
+    return (
+      <Tooltip title={country}>
+        <span><ReactCountryFlag countryCode={countryCode} /></span>
+      </Tooltip>
+    )
 }
