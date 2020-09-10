@@ -1,12 +1,6 @@
-import { getUserSubmissions } from '../api/codeforces'
-import { getProblemsetProblems } from './getProblemsetProblems'
-
 //problems are given in non increasing order of contestId
 //Note that for the same contest, div.1 contest has smaller id than div.2 contest
-export async function getNormalizedSubmissions(handle) {
-  const problems = await getProblemsetProblems()
-  const submissions = await getUserSubmissions(handle)
-
+export function normalizeSubmissions(submissions, problems) {
   const numProblems = problems.length
 
   let normalizedSubmissions = []

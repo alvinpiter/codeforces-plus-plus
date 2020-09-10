@@ -24,13 +24,17 @@ ids: {
   mode: "EXCLUDE"/"INCLUDE",
   ids: ["1A", "2B"]
 }
+
+* filter by metadata's state
+state: -1/0/1
 */
 export function filterProblems(problems, filterParameters) {
   const keyToFilterFunctionMap = {
     'rating': filterProblemsByRating,
     'contestID': filterProblemsByContestID,
     'tags': filterProblemsByTags,
-    'ids': filterProblemsByIDs
+    'ids': filterProblemsByIDs,
+    'state': filterProblemsByState
   }
 
   for (let entry of Object.entries(keyToFilterFunctionMap)) {
@@ -110,4 +114,10 @@ function filterProblemsByIDsWithExclude(problems, ids) {
 function filterProblemsByIDsWithInclude(problems, ids) {
   let idsSet = new Set(ids)
   return problems.filter(problem => idsSet.has(problem.id))
+}
+
+function filterProblemsByState(problems, state) {
+  return problems.filter(problem =>
+    problem.metadata !== undefined && problem.metadata.state === state
+  )
 }

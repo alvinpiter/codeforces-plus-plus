@@ -115,12 +115,17 @@ export default function ProblemTable(props) {
       </div>
     )
   } else {
-    const getRowBackgroundColor = (state) => {
+    const getRowBackgroundColor = (metadata) => {
+      if (metadata === undefined)
+        return ""
+
+      const { state } = metadata
       if (state === -1)
-        return "bg-red-300"
+        return "bg-red-200"
       else if (state === 1)
-        return "bg-green-300"
-      else return ""
+        return "bg-green-200"
+      else
+        return ""
     }
 
     let renderedRows = rows.slice()
@@ -147,12 +152,12 @@ export default function ProblemTable(props) {
                 ? renderedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : renderedRows
               ).map((row) => (
-                <TableRow key={row.id} className={getRowBackgroundColor(row.state)}>
+                <TableRow key={row.id} className={getRowBackgroundColor(row.metadata)}>
                   <TableCell size="small">
                     <Link href={row.url} underline="always">{row.id}</Link>
                     {
-                      row.state !== 0 && row.submittedID !== row.id &&
-                      <Tooltip title={`Submitted through ${row.submittedID}`}>
+                      row.metadata && row.metadata.state !== 0 && row.metadata.submittedProblemID !== row.id &&
+                      <Tooltip title={`Submitted through ${row.metadata.submittedProblemID}`}>
                         <InfoIcon />
                       </Tooltip>
                     }
