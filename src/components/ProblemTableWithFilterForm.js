@@ -6,7 +6,7 @@ import { filterProblems } from '../features/filterProblems'
 
 /*
 Expected props:
-* problems (array of Problem with submittedID and state). There are three possible state: -1 (attempted), 0 (not attempted), 1 (solved)
+* problems (array of Problem with metadata). There are three possible state: -1 (attempted), 0 (not attempted), 1 (solved)
 */
 export default function ProblemTableWithFilterForm(props) {
   const { problems } = props
@@ -62,7 +62,7 @@ export default function ProblemTableWithFilterForm(props) {
   const onApplyFilter = () => {
     setPage(0)
 
-    const filterParameters = {
+    let filterParameters = {
       rating: {
         minimum: minRating,
         maximum: maxRating
@@ -77,22 +77,21 @@ export default function ProblemTableWithFilterForm(props) {
       }
     }
 
-    let tempProblems
     switch (problemDomain) {
-      case 'ALL':
-        tempProblems = problems.slice()
-        break
       case 'NOT_ATTEMPTED':
-        tempProblems = problems.filter(p => p.state === 0)
+        filterParameters.state = 0
         break
       case 'ATTEMPTED':
-        tempProblems = problems.filter(p => p.state === -1)
+        filterParameters.state = -1
+        break
+      case 'SOLVED':
+        filterParameters.state = 1
         break
       default:
-        tempProblems = problems.filter(p => p.state === 1)
+        break
     }
 
-    setFilteredProblems(filterProblems(tempProblems, filterParameters))
+    setFilteredProblems(filterProblems(problems, filterParameters))
   }
 
   return (

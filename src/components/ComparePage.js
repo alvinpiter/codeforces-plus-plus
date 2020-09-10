@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button'
 import { getCommonContests } from '../features/getCommonContests'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import CommonContests from './CommonContests'
-import { compare } from '../features/compare'
+import { compareProblems } from '../features/compareProblems'
 import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
 import NavBar from './NavBar'
 
@@ -45,7 +45,7 @@ export default function ComparePage(props) {
       const loadProblems = async(user, rival) => {
         setIsLoadingProblems(true)
 
-        const probs = await compare(user, rival)
+        const probs = await compareProblems(user, rival)
 
         setIsLoadingProblems(false)
         setProblems(probs)
