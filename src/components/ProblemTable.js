@@ -111,7 +111,7 @@ export default function ProblemTable(props) {
   if (rows.length === 0) {
     return (
       <div className="bg-yellow-300 p-2 rounded-md text-center">
-        Empty data
+        No problem found
       </div>
     )
   } else {
@@ -140,7 +140,7 @@ export default function ProblemTable(props) {
           />
         </div>
         <TableContainer component={Paper}>
-          <Table aria-label="custom pagination table" size="small">
+          <Table size="small">
             <ProblemTableHeader
               headers={headers}
               order={order}
@@ -158,7 +158,7 @@ export default function ProblemTable(props) {
                     {
                       row.metadata && row.metadata.state !== 0 && row.metadata.submittedProblemID !== row.id &&
                       <Tooltip title={`Submitted through ${row.metadata.submittedProblemID}`}>
-                        <InfoIcon />
+                        <InfoIcon style={{fontSize: 16}}/>
                       </Tooltip>
                     }
                   </TableCell>

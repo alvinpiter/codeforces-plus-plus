@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
+import { TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import { getPersonalizedProblems } from '../features/getPersonalizedProblems'
 import NavBar from '../components/NavBar'
+import Container from '../components/Container'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
@@ -39,27 +40,29 @@ export default function ProblemsPage() {
   return (
     <div>
       <NavBar activePageIndex={0}/>
-      <FormGroup row={true}>
-        <TextField
-          label="Handle"
-          placeholder="Example: tourist"
-          onChange={e => setHandle(e.target.value)}
-        />
+      <Container>
+        <div className="flex space-x-2">
+          <TextField
+            label="Handle"
+            placeholder="Example: tourist"
+            onChange={e => setHandle(e.target.value)}
+          />
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onHandleSubmit}
-        > Submit </Button>
-      </FormGroup>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onHandleSubmit}
+          > Submit </Button>
+        </div>
 
-      {
-        isLoading ?
-        <CircularProgress /> :
-        <ProblemTableWithFilterForm
-          problems={problems}
-        />
-      }
+        {
+          isLoading ?
+          <div className="flex justify-center">
+            <CircularProgress size={60} />
+          </div> :
+          <ProblemTableWithFilterForm problems={problems} />
+        }
+      </Container>
     </div>
   )
 }
