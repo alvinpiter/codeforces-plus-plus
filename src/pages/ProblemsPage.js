@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { TextField, Button } from '@material-ui/core'
-import { getProblemsetProblems } from '../features/getProblemsetProblems'
+import getProblemsetProblems from '../features/getProblemsetProblems'
+import getPersonalizedProblems from '../features/getPersonalizedProblems'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
-import { getPersonalizedProblems } from '../features/getPersonalizedProblems'
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'
 import Spinner from '../components/Spinner'
+import { TextField, Button } from '@material-ui/core'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')

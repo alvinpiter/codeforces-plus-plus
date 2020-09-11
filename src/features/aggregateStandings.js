@@ -17,7 +17,7 @@ Return object:
   unofficialCountries: []
 }
 */
-export async function aggregateStandings(contestID) {
+export default async function aggregateStandings(contestID) {
   let officialStandingsPromise = getContestStandings(contestID)
   let unofficialStandingsPromise = getContestStandings(contestID, { showUnofficial: true })
 

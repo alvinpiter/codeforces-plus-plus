@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import filterProblems from '../features/filterProblems'
 import ProblemFilterForm from './ProblemFilterForm'
 import ProblemTable from './ProblemTable'
-import { PROBLEM_TAGS } from '../constants/problemTags'
-import { filterProblems } from '../features/filterProblems'
+import { PROBLEM_TAGS } from '../constants/ProblemTags'
 
 /*
 Expected props:

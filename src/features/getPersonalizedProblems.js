@@ -1,8 +1,8 @@
 import { getUserSubmissions } from '../api/codeforces'
-import { getProblemsetProblems } from './getProblemsetProblems'
-import { normalizeSubmissions } from './normalizeSubmissions'
+import getProblemsetProblems from './getProblemsetProblems'
+import normalizeSubmissions from './normalizeSubmissions'
 
-export async function getPersonalizedProblems(handle) {
+export default async function getPersonalizedProblems(handle) {
   const problems = await getProblemsetProblems()
   const submissions = await getUserSubmissions(handle)
 

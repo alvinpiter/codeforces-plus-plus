@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { getPastContestList } from '../features/getPastContestList'
-import { aggregateStandings } from '../features/aggregateStandings'
+import getPastContestList from '../features/getPastContestList'
+import aggregateStandings from '../features/aggregateStandings'
 import StandingTableWithFilter from '../components/StandingTableWithFilter'
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'

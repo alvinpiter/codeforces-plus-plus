@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import filterRanklistRows from '../features/filterRanklistRows'
 import StandingFilter from './StandingFilter'
 import StandingTable from './StandingTable'
-import { filterRanklistRows } from '../features/filterRanklistRows'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 

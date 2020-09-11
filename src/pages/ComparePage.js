@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import { getCommonContests } from '../features/getCommonContests'
+import getCommonContests from '../features/getCommonContests'
+import compareProblems from '../features/compareProblems'
 import CommonContests from '../components/CommonContests'
-import { compareProblems } from '../features/compareProblems'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'
 import Spinner from '../components/Spinner'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 export default function ComparePage(props) {
   const [userHandleValue, setUserHandleValue] = useState("")
