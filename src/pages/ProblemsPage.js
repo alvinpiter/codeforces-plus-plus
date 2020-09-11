@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { TextField, Button, CircularProgress } from '@material-ui/core'
+import { TextField, Button } from '@material-ui/core'
 import { getProblemsetProblems } from '../features/getProblemsetProblems'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import { getPersonalizedProblems } from '../features/getPersonalizedProblems'
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'
+import Spinner from '../components/Spinner'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
@@ -57,9 +58,7 @@ export default function ProblemsPage() {
 
         {
           isLoading ?
-          <div className="flex justify-center">
-            <CircularProgress size={60} />
-          </div> :
+          <Spinner /> :
           <ProblemTableWithFilterForm problems={problems} />
         }
       </Container>

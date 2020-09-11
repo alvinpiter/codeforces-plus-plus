@@ -49,19 +49,7 @@ export default function StandingTableWithFilter(props) {
     setSelectedHandles(value.map(v => v.handle))
   }
 
-  const onShowUnofficialToggle = () => {
-    if (showUnofficial === true) {
-      setShowUnofficial(false)
-      setFilteredRows(officialRows)
-    } else {
-      setShowUnofficial(true)
-      setFilteredRows(unofficialRows)
-    }
-  }
-
-  const onApplyFilter = () => {
-    setPage(0)
-
+  const doApplyFilter = (rows) => {
     const filterParameters = {}
     if (selectedHandles.length > 0)
       filterParameters.handles = selectedHandles
@@ -69,21 +57,39 @@ export default function StandingTableWithFilter(props) {
     if (selectedCountryCodes.length > 0)
       filterParameters.countryCodes = selectedCountryCodes
 
+    setFilteredRows(filterRanklistRows(rows, filterParameters))
+  }
+
+  const onShowUnofficialToggle = () => {
+    if (showUnofficial === true) {
+      setShowUnofficial(false)
+      doApplyFilter(officialRows)
+    } else {
+      setShowUnofficial(true)
+      doApplyFilter(unofficialRows)
+    }
+  }
+
+  const onApplyFilter = () => {
+    setPage(0)
+
     if (showUnofficial)
-      setFilteredRows(filterRanklistRows(unofficialRows, filterParameters))
+      doApplyFilter(unofficialRows)
     else
-      setFilteredRows(filterRanklistRows(officialRows, filterParameters))
+      doApplyFilter(officialRows)
   }
 
   return (
     <div>
-      <StandingFilter
-        countries={showUnofficial ? unofficialCountries : officialCountries}
-        users={showUnofficial ? unofficialUsers : officialUsers}
-        onCountriesChange={onCountriesChange}
-        onUsersChange={onUsersChange}
-        onApplyFilter={onApplyFilter}
-      />
+      <div className="w-1/3">
+        <StandingFilter
+          countries={showUnofficial ? unofficialCountries : officialCountries}
+          users={showUnofficial ? unofficialUsers : officialUsers}
+          onCountriesChange={onCountriesChange}
+          onUsersChange={onUsersChange}
+          onApplyFilter={onApplyFilter}
+        />
+      </div>
 
       <div className="flex justify-end">
         <FormControlLabel

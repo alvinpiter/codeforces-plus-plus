@@ -22,10 +22,10 @@ export function filterRanklistRows(rows, filterParameters) {
   return rows.filter(row => {
     if (row.hasOwnProperty('userInfos')) {
       for (let userInfo of row.userInfos) {
-        if (handlesSet.has(userInfo.handle))
-          return true
+        const byHandle = (handlesSet.size > 0 ? handlesSet.has(userInfo.handle) : true)
+        const byCountryCode = (countryCodesSet.size > 0 ? countryCodesSet.has(userInfo.countryCode) : true)
 
-        if (countryCodesSet.has(userInfo.countryCode))
+        if (byHandle || byCountryCode)
           return true
       }
 
