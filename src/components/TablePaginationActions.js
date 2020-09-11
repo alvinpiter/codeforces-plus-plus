@@ -7,17 +7,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
 
-// const useStyles1 = makeStyles((theme) => ({
-//   root: {
-//     display: "flex",
-//     flexShrink: 0,
-//     marginLeft: theme.spacing(2.5),
-//   },
-// }));
-
 export default function TablePaginationActions(props) {
-  // const classes = useStyles1()
-
   const { count, page, rowsPerPage, onChangePage } = props;
 
   const handleFirstPageButtonClick = (event) => {

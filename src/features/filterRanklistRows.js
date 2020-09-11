@@ -6,7 +6,7 @@ Supported filterParameters:
   countryCodes: ["ID", "JP"]
 }
 */
-export function filterRanklistRows(rows, filterParameters) {
+export default function filterRanklistRows(rows, filterParameters) {
   let handlesSet = new Set()
   if (filterParameters.hasOwnProperty('handles')) {
     for (let handle of filterParameters.handles)

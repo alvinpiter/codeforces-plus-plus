@@ -1,6 +1,6 @@
 //problems are given in non increasing order of contestId
 //Note that for the same contest, div.1 contest has smaller id than div.2 contest
-export function normalizeSubmissions(submissions, problems) {
+export default function normalizeSubmissions(submissions, problems) {
   const numProblems = problems.length
 
   let normalizedSubmissions = []

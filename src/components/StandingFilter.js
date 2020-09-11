@@ -7,7 +7,7 @@ export default function StandingFilter(props) {
   const { countries, users, onCountriesChange, onUsersChange, onApplyFilter } = props
 
   return (
-    <div>
+    <div className="space-y-4">
       <Autocomplete
         multiple
         options={users}
@@ -34,7 +34,9 @@ export default function StandingFilter(props) {
         }
         onChange={onCountriesChange}
       />
-      <Button variant="contained" color="primary" onClick={onApplyFilter}>Submit</Button>
+      <div className="flex justify-end">
+        <Button variant="contained" color="primary" onClick={onApplyFilter}> Apply filter </Button>
+      </div>
     </div>
   )
 }

@@ -3,6 +3,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
+import GitHubIcon from '@material-ui/icons/GitHub';
 
 export default function NavBar(props) {
   const { activePageIndex } = props
@@ -30,6 +31,16 @@ export default function NavBar(props) {
               />
             )
           }
+
+          <div className="p-2">
+            <Link
+              href="https://github.com/alvinpiter/codeforces-plus-plus"
+              color="inherit"
+              target="_blank"
+            >
+              <GitHubIcon />
+            </Link>
+          </div>
         </div>
       </Toolbar>
     </AppBar>

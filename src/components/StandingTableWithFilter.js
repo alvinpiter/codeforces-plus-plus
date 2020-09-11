@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import filterRanklistRows from '../features/filterRanklistRows'
 import StandingFilter from './StandingFilter'
 import StandingTable from './StandingTable'
-import { filterRanklistRows } from '../features/filterRanklistRows'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
@@ -49,41 +49,45 @@ export default function StandingTableWithFilter(props) {
     setSelectedHandles(value.map(v => v.handle))
   }
 
+  const doApplyFilter = (rows) => {
+    const filterParameters = {
+      handles: selectedHandles,
+      countryCodes: selectedCountryCodes
+    }
+
+    setFilteredRows(filterRanklistRows(rows, filterParameters))
+  }
+
   const onShowUnofficialToggle = () => {
     if (showUnofficial === true) {
       setShowUnofficial(false)
-      setFilteredRows(officialRows)
+      doApplyFilter(officialRows)
     } else {
       setShowUnofficial(true)
-      setFilteredRows(unofficialRows)
+      doApplyFilter(unofficialRows)
     }
   }
 
   const onApplyFilter = () => {
     setPage(0)
 
-    const filterParameters = {}
-    if (selectedHandles.length > 0)
-      filterParameters.handles = selectedHandles
-
-    if (selectedCountryCodes.length > 0)
-      filterParameters.countryCodes = selectedCountryCodes
-
     if (showUnofficial)
-      setFilteredRows(filterRanklistRows(unofficialRows, filterParameters))
+      doApplyFilter(unofficialRows)
     else
-      setFilteredRows(filterRanklistRows(officialRows, filterParameters))
+      doApplyFilter(officialRows)
   }
 
   return (
     <div>
-      <StandingFilter
-        countries={showUnofficial ? unofficialCountries : officialCountries}
-        users={showUnofficial ? unofficialUsers : officialUsers}
-        onCountriesChange={onCountriesChange}
-        onUsersChange={onUsersChange}
-        onApplyFilter={onApplyFilter}
-      />
+      <div className="w-1/3">
+        <StandingFilter
+          countries={showUnofficial ? unofficialCountries : officialCountries}
+          users={showUnofficial ? unofficialUsers : officialUsers}
+          onCountriesChange={onCountriesChange}
+          onUsersChange={onUsersChange}
+          onApplyFilter={onApplyFilter}
+        />
+      </div>
 
       <div className="flex justify-end">
         <FormControlLabel

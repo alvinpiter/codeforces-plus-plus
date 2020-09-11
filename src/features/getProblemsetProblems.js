@@ -1,6 +1,6 @@
 import { problemsetProblems } from '../api/codeforces'
 
-export async function getProblemsetProblems() {
+export default async function getProblemsetProblems() {
   const apiResult = await problemsetProblems()
 
   let problemSolvedCountMap = new Map()

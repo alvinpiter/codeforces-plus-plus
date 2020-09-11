@@ -28,7 +28,7 @@ ids: {
 * filter by metadata's state
 state: -1/0/1
 */
-export function filterProblems(problems, filterParameters) {
+export default function filterProblems(problems, filterParameters) {
   const keyToFilterFunctionMap = {
     'rating': filterProblemsByRating,
     'contestID': filterProblemsByContestID,

@@ -1,8 +1,8 @@
-import { filterProblems } from './filterProblems'
-import { getPersonalizedProblems } from './getPersonalizedProblems'
+import filterProblems from './filterProblems'
+import getPersonalizedProblems from './getPersonalizedProblems'
 
 //Returns an array of problems (with metadata) solved by rivalHandle but not by handle
-export async function compareProblems(handle, rivalHandle) {
+export default async function compareProblems(handle, rivalHandle) {
   const problems = await getPersonalizedProblems(handle)
   const rivalProblems = await getPersonalizedProblems(rivalHandle)
 
