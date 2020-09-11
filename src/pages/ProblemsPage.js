@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { FormGroup, TextField, Button, CircularProgress } from '@material-ui/core'
 import { getProblemsetProblems } from '../features/getProblemsetProblems'
-import ProblemTableWithFilterForm from './ProblemTableWithFilterForm'
+import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import { getPersonalizedProblems } from '../features/getPersonalizedProblems'
-import NavBar from './NavBar'
+import NavBar from '../components/NavBar'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')

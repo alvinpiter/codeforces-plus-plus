@@ -1,7 +1,7 @@
 import React from 'react'
-import ProblemsPage from './components/ProblemsPage'
-import ComparePage from './components/ComparePage'
-import StandingsPage from './components/StandingsPage'
+import ProblemsPage from './pages/ProblemsPage'
+import ComparePage from './pages/ComparePage'
+import StandingsPage from './pages/StandingsPage'
 import {
   BrowserRouter as Router,
   Switch,

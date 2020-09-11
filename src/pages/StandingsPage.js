@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import ContestPicker from './ContestPicker'
+import ContestPicker from '../components/ContestPicker'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { getPastContestList } from '../features/getPastContestList'
 import { aggregateStandings } from '../features/aggregateStandings'
-import StandingTableWithFilter from './StandingTableWithFilter'
-import NavBar from './NavBar'
+import StandingTableWithFilter from '../components/StandingTableWithFilter'
+import NavBar from '../components/NavBar'
 
 export default function StandingsPage() {
   let [isLoadingContests, setIsLoadingContests] = useState(true)
