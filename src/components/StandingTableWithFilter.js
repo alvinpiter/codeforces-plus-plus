@@ -50,12 +50,10 @@ export default function StandingTableWithFilter(props) {
   }
 
   const doApplyFilter = (rows) => {
-    const filterParameters = {}
-    if (selectedHandles.length > 0)
-      filterParameters.handles = selectedHandles
-
-    if (selectedCountryCodes.length > 0)
-      filterParameters.countryCodes = selectedCountryCodes
+    const filterParameters = {
+      handles: selectedHandles,
+      countryCodes: selectedCountryCodes
+    }
 
     setFilteredRows(filterRanklistRows(rows, filterParameters))
   }
