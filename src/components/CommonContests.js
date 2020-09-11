@@ -18,8 +18,13 @@ import { ratedFormat } from '../utils/rating'
 export default function CommonContests(props) {
   const { firstHandle, secondHandle, commonContests } = props
 
-  if (commonContests.length === 0)
-    return null
+  if (commonContests.length === 0) {
+    return (
+      <div>
+        <h1> {firstHandle} and {secondHandle} has never participated in the same contest </h1>
+      </div>
+    )
+  }
 
   let numContests = commonContests.length
   let numFirstWin = 0
@@ -51,9 +56,11 @@ export default function CommonContests(props) {
   })
 
   return (
-    <div>
-      <p> {firstHandle} wins against {secondHandle} {numFirstWin} times in their last {numContests} common contests </p>
-      {commonContestsComponent}
+    <div className="space-y-4">
+      <p> {firstHandle} won against {secondHandle} {numFirstWin} times in their last {numContests} common contests </p>
+      <div className="w-1/2">
+        {commonContestsComponent}
+      </div>
     </div>
   )
 }

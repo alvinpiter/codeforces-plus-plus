@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import { getCommonContests } from '../features/getCommonContests'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import CommonContests from '../components/CommonContests'
 import { compareProblems } from '../features/compareProblems'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import NavBar from '../components/NavBar'
+import Container from '../components/Container'
+import Spinner from '../components/Spinner'
 
 export default function ComparePage(props) {
   const [userHandleValue, setUserHandleValue] = useState("")
@@ -21,12 +22,15 @@ export default function ComparePage(props) {
   const [commonContests, setCommonContests] = useState([])
 
   const [displaySwitch, setDisplaySwitch] = useState(false)
+  const [stage, setStage] = useState('NOT_SUBMITTED')
 
   const onSubmit = () => {
     setHandlePair({
       user: userHandleValue,
       rival: rivalHandleValue
     })
+
+    setStage('SUBMITTED')
   }
 
   const onSwitch = () => {
@@ -75,55 +79,70 @@ export default function ComparePage(props) {
   return (
     <div>
       <NavBar activePageIndex={1}/>
-      <div className="flex space-x-2">
-        <TextField
-          label="Handle"
-          placeholder="Example: tourist"
-          onChange={e => setUserHandleValue(e.target.value)}
-          value={userHandleValue}
-        />
+      <Container>
+        <div className="flex space-x-2">
+          <TextField
+            label="Handle"
+            placeholder="Example: tourist"
+            onChange={e => setUserHandleValue(e.target.value)}
+            value={userHandleValue}
+          />
 
-        <TextField
-          label="Rival handle"
-          placeholder="Example: Petr"
-          onChange={e => setRivalHandleValue(e.target.value)}
-          value={rivalHandleValue}
-        />
+          <TextField
+            label="Rival handle"
+            placeholder="Example: Petr"
+            onChange={e => setRivalHandleValue(e.target.value)}
+            value={rivalHandleValue}
+          />
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onSubmit}
-        >
-          Submit
-        </Button>
-
-        {
-          displaySwitch ?
           <Button
             variant="contained"
             color="primary"
-            onClick={onSwitch}
-          > Switch </Button> :
+            onClick={onSubmit}
+          >
+            Submit
+          </Button>
+
+          {
+            displaySwitch ?
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onSwitch}
+            > Switch </Button> :
+            null
+          }
+        </div>
+
+        {
+          stage === 'SUBMITTED' ?
+          (isLoadingProblems ?
+            <Spinner /> :
+            <div>
+              <h1 className="text-2xl font-bold"> Problems </h1>
+              <p> Problems solved by {rivalHandleValue} but not by {userHandleValue} </p>
+              <ProblemTableWithFilterForm problems={problems} />
+            </div>
+          ) :
           null
         }
-      </div>
 
-      {
-        isLoadingProblems ?
-        <CircularProgress /> :
-        <ProblemTableWithFilterForm problems={problems} />
-      }
-
-      {
-        isLoadingCommonContests ?
-        <CircularProgress /> :
-        <CommonContests
-          firstHandle={userHandleValue}
-          secondHandle={rivalHandleValue}
-          commonContests={commonContests}
-        />
-      }
+        {
+          stage === 'SUBMITTED' ?
+          (isLoadingCommonContests ?
+            <Spinner /> :
+            <div>
+              <h1 className="text-2xl font-bold"> Contests </h1>
+              <CommonContests
+                firstHandle={userHandleValue}
+                secondHandle={rivalHandleValue}
+                commonContests={commonContests}
+              />
+            </div>
+          ) :
+          null
+        }
+      </Container>
     </div>
   )
 }
