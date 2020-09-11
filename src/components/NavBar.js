@@ -33,7 +33,11 @@ export default function NavBar(props) {
           }
 
           <div className="p-2">
-            <Link href="https://github.com/alvinpiter/codeforces-plus-plus" color="inherit">
+            <Link
+              href="https://github.com/alvinpiter/codeforces-plus-plus"
+              color="inherit"
+              target="_blank"
+            >
               <GitHubIcon />
             </Link>
           </div>
