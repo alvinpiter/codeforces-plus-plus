@@ -13,6 +13,8 @@ export default function ProblemsPage() {
   const [problems, setProblems] = useState([])
 
   useEffect(() => {
+    document.title = 'Codeforces++ | Problems'
+
     const getProblems = async () => {
       setIsLoading(true)
 

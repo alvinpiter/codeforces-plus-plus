@@ -24,6 +24,10 @@ export default function ComparePage(props) {
   const [displaySwitch, setDisplaySwitch] = useState(false)
   const [stage, setStage] = useState('NOT_SUBMITTED')
 
+  useEffect(() => {
+    document.title = 'Codeforces++ | Compare'
+  }, [])
+
   const onSubmit = () => {
     setHandlePair({
       user: userHandleValue,

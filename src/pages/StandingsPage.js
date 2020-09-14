@@ -30,6 +30,8 @@ export default function StandingsPage() {
   }
 
   useEffect(() => {
+    document.title = 'Codeforces++ | Standings'
+
     const loadContests = async () => {
       const contests = await getPastContestList()
 
