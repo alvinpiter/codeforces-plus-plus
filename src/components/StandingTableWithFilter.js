@@ -79,7 +79,7 @@ export default function StandingTableWithFilter(props) {
 
   return (
     <div>
-      <div className="w-1/3">
+      <div className="w-1/3 m-2">
         <StandingFilter
           countries={showUnofficial ? unofficialCountries : officialCountries}
           users={showUnofficial ? unofficialUsers : officialUsers}
@@ -89,7 +89,7 @@ export default function StandingTableWithFilter(props) {
         />
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end hidden">
         <FormControlLabel
           control={<Switch checked={showUnofficial} onChange={onShowUnofficialToggle} color="primary"/>}
           label="Show unofficial"
