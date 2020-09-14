@@ -25,6 +25,7 @@ export default function NavBar(props) {
           {
             pages.map((page, index) =>
               <NavBarLink
+                key={index}
                 href={page.href}
                 text={page.name}
                 isActive={index === activePageIndex}
