@@ -8,6 +8,7 @@ import Container from '../components/Container'
 import Spinner from '../components/Spinner'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import Alert from '@material-ui/lab/Alert'
 
 export default function ComparePage(props) {
   const [userHandleValue, setUserHandleValue] = useState("")
@@ -18,11 +19,13 @@ export default function ComparePage(props) {
 
   const [isLoadingProblems, setIsLoadingProblems] = useState(false)
   const [problems, setProblems] = useState([])
+  const [loadingProblemsError, setLoadingProblemsError] = useState(null)
 
   const [handlePair, setHandlePair] = useState({user: "", rival: ""})
 
   const [isLoadingCommonContests, setIsLoadingCommonContests] = useState(false)
   const [commonContests, setCommonContests] = useState([])
+  const [loadingCommonContestsError, setLoadingCommonContestsError] = useState(null)
 
   const [displaySwitch, setDisplaySwitch] = useState(false)
   const [stage, setStage] = useState('NOT_SUBMITTED')
@@ -38,6 +41,8 @@ export default function ComparePage(props) {
     })
 
     setStage('SUBMITTED')
+    setLoadingProblemsError(null)
+    setLoadingCommonContestsError(null)
   }
 
   const onSwitch = () => {
@@ -49,28 +54,42 @@ export default function ComparePage(props) {
     const temp = rivalHandleValue
     setRivalHandleValue(userHandleValue)
     setUserHandleValue(temp)
+    setLoadingProblemsError(null)
+    setLoadingCommonContestsError(null)
   }
 
   useEffect(() => {
     if (handlePair.user !== "" && handlePair.rival !== "") {
       const loadProblems = async(user, rival) => {
-        setIsLoadingProblems(true)
+        try {
+          setIsLoadingProblems(true)
 
-        const probs = await compareProblems(user, rival)
+          const probs = await compareProblems(user, rival)
 
-        setIsLoadingProblems(false)
-        setProblems(probs)
-        setSubmittedUserHandle(user)
-        setSubmittedRivalHandle(rival)
+          setIsLoadingProblems(false)
+          setProblems(probs)
+          setSubmittedUserHandle(user)
+          setSubmittedRivalHandle(rival)
+        } catch (e) {
+          setIsLoadingProblems(false)
+          setLoadingProblemsError(e)
+        }
       }
 
       const loadCommonContests = async (user, rival) => {
-        setIsLoadingCommonContests(true)
+        try {
+          setIsLoadingCommonContests(true)
 
-        const contests = await getCommonContests(user, rival)
+          const contests = await getCommonContests(user, rival)
 
-        setIsLoadingCommonContests(false)
-        setCommonContests(contests)
+          setIsLoadingCommonContests(false)
+          setCommonContests(contests)
+          setSubmittedUserHandle(user)
+          setSubmittedRivalHandle(rival)
+        } catch (e) {
+          setIsLoadingCommonContests(false)
+          setLoadingCommonContestsError(e)
+        }
       }
 
       setDisplaySwitch(false)
@@ -125,13 +144,33 @@ export default function ComparePage(props) {
 
         {
           stage === 'SUBMITTED' ?
+          (
+            <div>
+              {
+                loadingProblemsError === null ?
+                null :
+                <Alert severity="error"> {loadingProblemsError.message} </Alert>
+              }
+
+              {
+                loadingCommonContestsError === null ?
+                null :
+                <Alert severity="error"> {loadingCommonContestsError.message} </Alert>
+              }
+            </div>
+          ) :
+          null
+        }
+
+        {
+          stage === 'SUBMITTED' ?
           (isLoadingProblems ?
             <Spinner /> :
-            <div>
+            <Errorable error={loadingProblemsError !== null}>
               <h1 className="text-2xl font-bold"> Problems </h1>
               <p> Problems solved by {submittedRivalHandle} but not by {submittedUserHandle} </p>
               <ProblemTableWithFilterForm problems={problems} />
-            </div>
+            </Errorable>
           ) :
           null
         }
@@ -140,18 +179,32 @@ export default function ComparePage(props) {
           stage === 'SUBMITTED' ?
           (isLoadingCommonContests ?
             <Spinner /> :
-            <div>
+            <Errorable error={loadingCommonContestsError !== null}>
               <h1 className="text-2xl font-bold"> Contests </h1>
               <CommonContests
                 firstHandle={submittedUserHandle}
                 secondHandle={submittedRivalHandle}
                 commonContests={commonContests}
               />
-            </div>
+            </Errorable>
           ) :
           null
         }
       </Container>
     </div>
   )
+}
+
+function Errorable(props) {
+  const { error } = props
+
+  if (error)
+    return null
+  else {
+    return (
+      <div>
+        {props.children}
+      </div>
+    )
+  }
 }
