@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import getCommonContests from '../features/getCommonContests'
-import compareProblems from '../features/compareProblems'
+import compare from '../features/compare'
 import CommonContests from '../components/CommonContests'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import NavBar from '../components/NavBar'
@@ -11,93 +10,62 @@ import Button from '@material-ui/core/Button'
 import Alert from '@material-ui/lab/Alert'
 
 export default function ComparePage(props) {
-  const [userHandleValue, setUserHandleValue] = useState("")
-  const [submittedUserHandle, setSubmittedUserHandle] = useState("")
+  const [handle, setHandle] = useState("")
+  const [rivalHandle, setRivalHandle] = useState("")
 
-  const [rivalHandleValue, setRivalHandleValue] = useState("")
-  const [submittedRivalHandle, setSubmittedRivalHandle] = useState("")
-
-  const [isLoadingProblems, setIsLoadingProblems] = useState(false)
-  const [problems, setProblems] = useState([])
-  const [loadingProblemsError, setLoadingProblemsError] = useState(null)
-
-  const [handlePair, setHandlePair] = useState({user: "", rival: ""})
-
-  const [isLoadingCommonContests, setIsLoadingCommonContests] = useState(false)
-  const [commonContests, setCommonContests] = useState([])
-  const [loadingCommonContestsError, setLoadingCommonContestsError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [compareResult, setCompareResult] = useState(null)
+  const [compareError, setCompareError] = useState(null)
 
   const [displaySwitch, setDisplaySwitch] = useState(false)
   const [stage, setStage] = useState('NOT_SUBMITTED')
+
+  const [handlePair, setHandlePair] = useState({handle: "", rivalHandle: ""})
 
   useEffect(() => {
     document.title = 'Codeforces++ | Compare'
   }, [])
 
   const onSubmit = () => {
-    setHandlePair({
-      user: userHandleValue,
-      rival: rivalHandleValue
-    })
+    setHandlePair({ handle, rivalHandle })
 
     setStage('SUBMITTED')
-    setLoadingProblemsError(null)
-    setLoadingCommonContestsError(null)
+    setCompareError(null)
   }
 
   const onSwitch = () => {
     setHandlePair({
-      user: rivalHandleValue,
-      rival: userHandleValue
+      handle: rivalHandle,
+      rivalHandle: handle
     })
 
-    const temp = rivalHandleValue
-    setRivalHandleValue(userHandleValue)
-    setUserHandleValue(temp)
-    setLoadingProblemsError(null)
-    setLoadingCommonContestsError(null)
+    const temp = rivalHandle
+    setRivalHandle(handle)
+    setHandle(temp)
+
+    setCompareError(null)
   }
 
   useEffect(() => {
-    if (handlePair.user !== "" && handlePair.rival !== "") {
-      const loadProblems = async(user, rival) => {
+    if (handlePair.handle !== "" && handlePair.rivalHandle !== "") {
+      const loadCompareResult = async(handle, rivalHandle) => {
         try {
-          setIsLoadingProblems(true)
+          setIsLoading(true)
 
-          const probs = await compareProblems(user, rival)
+          const result = await compare(handle, rivalHandle)
+          console.log(result)
 
-          setIsLoadingProblems(false)
-          setProblems(probs)
-          setSubmittedUserHandle(user)
-          setSubmittedRivalHandle(rival)
+          setIsLoading(false)
+          setCompareResult(result)
         } catch (e) {
-          setIsLoadingProblems(false)
-          setLoadingProblemsError(e)
-        }
-      }
-
-      const loadCommonContests = async (user, rival) => {
-        try {
-          setIsLoadingCommonContests(true)
-
-          const contests = await getCommonContests(user, rival)
-
-          setIsLoadingCommonContests(false)
-          setCommonContests(contests)
-          setSubmittedUserHandle(user)
-          setSubmittedRivalHandle(rival)
-        } catch (e) {
-          setIsLoadingCommonContests(false)
-          setLoadingCommonContestsError(e)
+          setIsLoading(false)
+          setCompareError(e)
         }
       }
 
       setDisplaySwitch(false)
 
-      const { user, rival } = handlePair
-
-      loadProblems(user, rival)
-      loadCommonContests(user, rival)
+      loadCompareResult(handlePair.handle, handlePair.rivalHandle)
 
       setDisplaySwitch(true)
     } else
@@ -112,15 +80,15 @@ export default function ComparePage(props) {
           <TextField
             label="Handle"
             placeholder="Example: tourist"
-            onChange={e => setUserHandleValue(e.target.value)}
-            value={userHandleValue}
+            onChange={e => setHandle(e.target.value)}
+            value={handle}
           />
 
           <TextField
             label="Rival handle"
             placeholder="Example: Petr"
-            onChange={e => setRivalHandleValue(e.target.value)}
-            value={rivalHandleValue}
+            onChange={e => setRivalHandle(e.target.value)}
+            value={rivalHandle}
           />
 
           <Button
@@ -145,47 +113,19 @@ export default function ComparePage(props) {
         {
           stage === 'SUBMITTED' ?
           (
-            <div>
-              {
-                loadingProblemsError === null ?
-                null :
-                <Alert severity="error"> {loadingProblemsError.message} </Alert>
-              }
-
-              {
-                loadingCommonContestsError === null ?
-                null :
-                <Alert severity="error"> {loadingCommonContestsError.message} </Alert>
-              }
-            </div>
+            compareError === null ?
+            null :
+            <Alert severity="error">{compareError.message} </Alert>
           ) :
           null
         }
 
         {
           stage === 'SUBMITTED' ?
-          (isLoadingProblems ?
-            <Spinner /> :
-            <Errorable error={loadingProblemsError !== null}>
-              <h1 className="text-2xl font-bold"> Problems </h1>
-              <p> Problems solved by {submittedRivalHandle} but not by {submittedUserHandle} </p>
-              <ProblemTableWithFilterForm problems={problems} />
-            </Errorable>
-          ) :
-          null
-        }
-
-        {
-          stage === 'SUBMITTED' ?
-          (isLoadingCommonContests ?
-            <Spinner /> :
-            <Errorable error={loadingCommonContestsError !== null}>
-              <h1 className="text-2xl font-bold"> Contests </h1>
-              <CommonContests
-                firstHandle={submittedUserHandle}
-                secondHandle={submittedRivalHandle}
-                commonContests={commonContests}
-              />
+          (isLoading ?
+            <Spinner />:
+            <Errorable error={compareError !== null}>
+              <CompareResult result={compareResult} />
             </Errorable>
           ) :
           null
@@ -207,4 +147,31 @@ function Errorable(props) {
       </div>
     )
   }
+}
+
+function CompareResult(props) {
+  const { result } = props
+  if (result === null)
+    return null
+
+  const { user, rival, problemsDiff, commonContests } = result
+
+  return (
+    <div>
+      <div>
+        <h1 className="text-2xl font-bold"> Problems </h1>
+        <p> Problems solved by {rival.handle} but not by {user.handle} </p>
+        <ProblemTableWithFilterForm problems={problemsDiff} />
+      </div>
+
+      <div>
+        <h1 className="text-2xl font-bold"> Contests </h1>
+        <CommonContests
+          firstHandle={user.handle}
+          secondHandle={rival.handle}
+          commonContests={commonContests}
+        />
+      </div>
+    </div>
+  )
 }
