@@ -5,12 +5,13 @@ import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'
 import Spinner from '../components/Spinner'
+import HandleSpan from '../components/HandleSpan'
 import { TextField, Button } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
-  const [submittedHandle, setSubmittedHandle] = useState('')
+  const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [problems, setProblems] = useState([])
@@ -41,12 +42,12 @@ export default function ProblemsPage() {
       try {
         setIsLoading(true)
 
-        const personalizedProblems = await getPersonalizedProblems(handle)
+        const result = await getPersonalizedProblems(handle)
 
         setIsLoading(false)
         setError(null)
-        setProblems(personalizedProblems)
-        setSubmittedHandle(handle)
+        setUser(result.user)
+        setProblems(result.personalizedProblems)
       } catch (e) {
         setIsLoading(false)
         setError(e)
@@ -85,9 +86,9 @@ export default function ProblemsPage() {
           <Spinner /> :
           <div>
             {
-              submittedHandle === '' ?
+              user === null ?
               null :
-              <h1 className="text-2xl font-bold"> Personalized problems for {submittedHandle} </h1>
+              <h1 className="text-2xl font-bold"> Personalized problems for <HandleSpan userInfo={user} /> </h1>
             }
             <ProblemTableWithFilterForm problems={problems} />
           </div>
