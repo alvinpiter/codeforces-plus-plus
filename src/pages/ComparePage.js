@@ -11,7 +11,10 @@ import Button from '@material-ui/core/Button'
 
 export default function ComparePage(props) {
   const [userHandleValue, setUserHandleValue] = useState("")
+  const [submittedUserHandle, setSubmittedUserHandle] = useState("")
+
   const [rivalHandleValue, setRivalHandleValue] = useState("")
+  const [submittedRivalHandle, setSubmittedRivalHandle] = useState("")
 
   const [isLoadingProblems, setIsLoadingProblems] = useState(false)
   const [problems, setProblems] = useState([])
@@ -57,6 +60,8 @@ export default function ComparePage(props) {
 
         setIsLoadingProblems(false)
         setProblems(probs)
+        setSubmittedUserHandle(user)
+        setSubmittedRivalHandle(rival)
       }
 
       const loadCommonContests = async (user, rival) => {
@@ -124,7 +129,7 @@ export default function ComparePage(props) {
             <Spinner /> :
             <div>
               <h1 className="text-2xl font-bold"> Problems </h1>
-              <p> Problems solved by {rivalHandleValue} but not by {userHandleValue} </p>
+              <p> Problems solved by {submittedRivalHandle} but not by {submittedUserHandle} </p>
               <ProblemTableWithFilterForm problems={problems} />
             </div>
           ) :
@@ -138,8 +143,8 @@ export default function ComparePage(props) {
             <div>
               <h1 className="text-2xl font-bold"> Contests </h1>
               <CommonContests
-                firstHandle={userHandleValue}
-                secondHandle={rivalHandleValue}
+                firstHandle={submittedUserHandle}
+                secondHandle={submittedRivalHandle}
                 commonContests={commonContests}
               />
             </div>
