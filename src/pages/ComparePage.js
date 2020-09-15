@@ -144,7 +144,7 @@ function CompareResult(props) {
   const { user, rival, problemsDiff, commonContests } = result
 
   return (
-    <div>
+    <div className="space-y-2">
       <div>
         <h1 className="text-2xl font-bold"> Problems </h1>
         <p> Problems solved by <HandleSpan userInfo={rival} /> but not by <HandleSpan userInfo={user} /></p>
