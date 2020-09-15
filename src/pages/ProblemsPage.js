@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { getUserInfos } from '../api/codeforces'
 import getProblemsetProblems from '../features/getProblemsetProblems'
 import getPersonalizedProblems from '../features/getPersonalizedProblems'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
@@ -38,23 +39,24 @@ export default function ProblemsPage() {
   }, [])
 
   const onHandleSubmit = () => {
-    const getProblems = async (handle) => {
+    const getProblemsAndUser = async (handle) => {
       try {
         setIsLoading(true)
 
-        const result = await getPersonalizedProblems(handle)
+        const users = await getUserInfos([handle])
+        const personalizedProblems = await getPersonalizedProblems(handle)
 
         setIsLoading(false)
         setError(null)
-        setUser(result.user)
-        setProblems(result.personalizedProblems)
+        setUser(users[0])
+        setProblems(personalizedProblems)
       } catch (e) {
         setIsLoading(false)
         setError(e)
       }
     }
 
-    getProblems(handle)
+    getProblemsAndUser(handle)
   }
 
   return (

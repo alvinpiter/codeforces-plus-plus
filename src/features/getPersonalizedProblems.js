@@ -1,13 +1,11 @@
-import { getUserInfos, getUserSubmissions } from '../api/codeforces'
+import { getUserSubmissions } from '../api/codeforces'
 import getProblemsetProblems from './getProblemsetProblems'
 import normalizeSubmissions from './normalizeSubmissions'
 
 export default async function getPersonalizedProblems(handle) {
-  const usersPromise = getUserInfos([handle])
   const problemsPromise = getProblemsetProblems()
   const submissionsPromise = getUserSubmissions(handle)
 
-  const users = await usersPromise
   const problems = await problemsPromise
   const submissions = await submissionsPromise
 
@@ -59,8 +57,5 @@ export default async function getPersonalizedProblems(handle) {
     personalizedProblems.push({ ...problem, metadata })
   }
 
-  return {
-    user: users[0],
-    personalizedProblems
-  }
+  return personalizedProblems
 }
