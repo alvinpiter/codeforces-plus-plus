@@ -18,14 +18,18 @@ import {
   getContestURL,
   getContestProblemURL
 } from '../utils/url'
+import HandleSpan from './HandleSpan'
 
 export default function CommonContests(props) {
-  const { firstHandle, secondHandle, commonContests } = props
+  const { firstUser, secondUser, commonContests } = props
+
+  const firstUserSpan = <HandleSpan userInfo={firstUser}/>
+  const secondUserSpan = <HandleSpan userInfo={secondUser} />
 
   if (commonContests.length === 0) {
     return (
       <div>
-        <h1> {firstHandle} and {secondHandle} has never participated in the same contest </h1>
+        <h1> {firstUserSpan} and {secondUserSpan} has never participated in the same contest </h1>
       </div>
     )
   }
@@ -61,7 +65,7 @@ export default function CommonContests(props) {
 
   return (
     <div className="space-y-4">
-      <p> {firstHandle} won against {secondHandle} {numFirstWin} times in their last {numContests} common contests </p>
+      <p> {firstUserSpan} won against {secondUserSpan} {numFirstWin} times in their last {numContests} common contests </p>
       <div className="w-1/2">
         {commonContestsComponent}
       </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import compare from '../features/compare'
+import HandleSpan from '../components/HandleSpan'
 import CommonContests from '../components/CommonContests'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import NavBar from '../components/NavBar'
@@ -54,7 +55,6 @@ export default function ComparePage(props) {
           setIsLoading(true)
 
           const result = await compare(handle, rivalHandle)
-          console.log(result)
 
           setIsLoading(false)
           setCompareResult(result)
@@ -147,15 +147,15 @@ function CompareResult(props) {
     <div>
       <div>
         <h1 className="text-2xl font-bold"> Problems </h1>
-        <p> Problems solved by {rival.handle} but not by {user.handle} </p>
+        <p> Problems solved by <HandleSpan userInfo={rival} /> but not by <HandleSpan userInfo={user} /></p>
         <ProblemTableWithFilterForm problems={problemsDiff} />
       </div>
 
       <div>
         <h1 className="text-2xl font-bold"> Contests </h1>
         <CommonContests
-          firstHandle={user.handle}
-          secondHandle={rival.handle}
+          firstUser={user}
+          secondUser={rival}
           commonContests={commonContests}
         />
       </div>
