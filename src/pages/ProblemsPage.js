@@ -10,6 +10,7 @@ import Alert from '@material-ui/lab/Alert'
 
 export default function ProblemsPage() {
   const [handle, setHandle] = useState('')
+  const [submittedHandle, setSubmittedHandle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [problems, setProblems] = useState([])
@@ -45,6 +46,7 @@ export default function ProblemsPage() {
         setIsLoading(false)
         setError(null)
         setProblems(personalizedProblems)
+        setSubmittedHandle(handle)
       } catch (e) {
         setIsLoading(false)
         setError(e)
@@ -81,7 +83,14 @@ export default function ProblemsPage() {
         {
           isLoading ?
           <Spinner /> :
-          <ProblemTableWithFilterForm problems={problems} />
+          <div>
+            {
+              submittedHandle === '' ?
+              null :
+              <h1 className="text-2xl font-bold"> Personalized problems for {submittedHandle} </h1>
+            }
+            <ProblemTableWithFilterForm problems={problems} />
+          </div>
         }
       </Container>
     </div>
