@@ -5,25 +5,34 @@ import StandingTableWithFilter from '../components/StandingTableWithFilter'
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'
 import Spinner from '../components/Spinner'
+import DisplayIfNotError from '../components/DisplayIfNotError'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import Button from '@material-ui/core/Button'
+import Alert from '@material-ui/lab/Alert'
 
 export default function StandingsPage() {
   let [isLoadingContests, setIsLoadingContests] = useState(true)
   let [contests, setContests] = useState([])
+  let [loadingContestsError, setLoadingContestsError] = useState(null)
 
   let [isLoadingStandings, setIsLoadingStandings] = useState(false)
   let [standings, setStandings] = useState(null)
+  let [loadingStandingsError, setLoadingStandingsError] = useState(null)
 
   const onPicked = (contest) => {
     const loadStandings = async (contest) => {
-      setIsLoadingStandings(true)
+      try {
+        setIsLoadingStandings(true)
 
-      const res = await aggregateStandings(contest.id)
+        const res = await aggregateStandings(contest.id)
 
-      setIsLoadingStandings(false)
-      setStandings(res)
+        setIsLoadingStandings(false)
+        setStandings(res)
+      } catch(e) {
+        setIsLoadingStandings(false)
+        setLoadingStandingsError(e)
+      }
     }
 
     loadStandings(contest)
@@ -33,10 +42,15 @@ export default function StandingsPage() {
     document.title = 'Codeforces++ | Standings'
 
     const loadContests = async () => {
-      const contests = await getPastContestList()
+      try {
+        const contests = await getPastContestList()
 
-      setIsLoadingContests(false)
-      setContests(contests)
+        setIsLoadingContests(false)
+        setContests(contests)
+      } catch(e) {
+        setIsLoadingContests(false)
+        setLoadingContestsError(e)
+      }
     }
 
     loadContests()
@@ -46,21 +60,38 @@ export default function StandingsPage() {
     <div>
       <NavBar activePageIndex={2}/>
       <Container>
+        {
+          loadingContestsError === null ?
+          null :
+          <Alert severity="error"> {loadingContestsError.message} </Alert>
+        }
+
         <div className="flex justify-center">
           {
             isLoadingContests ?
             <Spinner /> :
-            <ContestPicker contests={contests} onPicked={onPicked}/>
+            <DisplayIfNotError error={loadingContestsError !== null}>
+              <ContestPicker contests={contests} onPicked={onPicked}/>
+            </DisplayIfNotError>
           }
         </div>
 
         {
+          loadingStandingsError === null ?
+          null :
+          <Alert severity="error"> {loadingStandingsError.message} </Alert>
+        }
+
+        {
           isLoadingStandings ?
           <Spinner /> :
-          (standings === null ?
-            null :
-            <StandingTableWithFilter standings={standings} />
-          )
+          <DisplayIfNotError error={loadingStandingsError !== null}>
+            {
+              standings === null ?
+              null :
+              <StandingTableWithFilter standings={standings} />
+            }
+          </DisplayIfNotError>
         }
       </Container>
     </div>

@@ -5,6 +5,7 @@ import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'
 import Spinner from '../components/Spinner'
+import DisplayIfNotError from '../components/DisplayIfNotError'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Alert from '@material-ui/lab/Alert'
@@ -115,7 +116,7 @@ export default function ComparePage(props) {
           (
             compareError === null ?
             null :
-            <Alert severity="error">{compareError.message} </Alert>
+            <Alert severity="error">{compareError.message}</Alert>
           ) :
           null
         }
@@ -124,29 +125,15 @@ export default function ComparePage(props) {
           stage === 'SUBMITTED' ?
           (isLoading ?
             <Spinner />:
-            <Errorable error={compareError !== null}>
+            <DisplayIfNotError error={compareError !== null}>
               <CompareResult result={compareResult} />
-            </Errorable>
+            </DisplayIfNotError>
           ) :
           null
         }
       </Container>
     </div>
   )
-}
-
-function Errorable(props) {
-  const { error } = props
-
-  if (error)
-    return null
-  else {
-    return (
-      <div>
-        {props.children}
-      </div>
-    )
-  }
 }
 
 function CompareResult(props) {
