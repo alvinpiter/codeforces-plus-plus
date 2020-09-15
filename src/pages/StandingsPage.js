@@ -24,6 +24,7 @@ export default function StandingsPage() {
     const loadStandings = async (contest) => {
       try {
         setIsLoadingStandings(true)
+        setLoadingStandingsError(null)
 
         const res = await aggregateStandings(contest.id)
 
