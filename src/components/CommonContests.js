@@ -14,14 +14,22 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RatingChange from './RatingChange'
 import { ratedFormat } from '../utils/rating'
+import {
+  getContestURL,
+  getContestProblemURL
+} from '../utils/url'
+import HandleSpan from './HandleSpan'
 
 export default function CommonContests(props) {
-  const { firstHandle, secondHandle, commonContests } = props
+  const { firstUser, secondUser, commonContests } = props
+
+  const firstUserSpan = <HandleSpan userInfo={firstUser}/>
+  const secondUserSpan = <HandleSpan userInfo={secondUser} />
 
   if (commonContests.length === 0) {
     return (
       <div>
-        <h1> {firstHandle} and {secondHandle} has never participated in the same contest </h1>
+        <h1> {firstUserSpan} and {secondUserSpan} has never participated in the same contest </h1>
       </div>
     )
   }
@@ -40,7 +48,7 @@ export default function CommonContests(props) {
     return (
       <Accordion key={commonContest.contest.id}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Link href={`https://codeforces.com/contest/${commonContest.contest.id}`}>
+          <Link href={getContestURL(commonContest.contest.id)} target="_blank">
             {commonContest.contest.name}
           </Link>
         </AccordionSummary>
@@ -57,7 +65,7 @@ export default function CommonContests(props) {
 
   return (
     <div className="space-y-4">
-      <p> {firstHandle} won against {secondHandle} {numFirstWin} times in their last {numContests} common contests </p>
+      <p> {firstUserSpan} won against {secondUserSpan} {numFirstWin} times in their last {numContests} common contests </p>
       <div className="w-1/2">
         {commonContestsComponent}
       </div>
@@ -106,7 +114,7 @@ function CommonContest(props) {
               return (
                 <TableRow key={problem.index}>
                   <TableCell>
-                    <Link href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}>
+                    <Link href={getContestProblemURL(problem.contestId, problem.index)} target="_blank">
                       {problem.index}. {problem.name}
                     </Link>
                   </TableCell>

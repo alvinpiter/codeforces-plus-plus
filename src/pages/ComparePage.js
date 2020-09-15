@@ -1,75 +1,72 @@
 import React, { useState, useEffect } from 'react'
-import getCommonContests from '../features/getCommonContests'
-import compareProblems from '../features/compareProblems'
+import compare from '../features/compare'
+import HandleSpan from '../components/HandleSpan'
 import CommonContests from '../components/CommonContests'
 import ProblemTableWithFilterForm from '../components/ProblemTableWithFilterForm'
 import NavBar from '../components/NavBar'
 import Container from '../components/Container'
 import Spinner from '../components/Spinner'
+import DisplayIfNotError from '../components/DisplayIfNotError'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import Alert from '@material-ui/lab/Alert'
 
 export default function ComparePage(props) {
-  const [userHandleValue, setUserHandleValue] = useState("")
-  const [rivalHandleValue, setRivalHandleValue] = useState("")
+  const [handle, setHandle] = useState("")
+  const [rivalHandle, setRivalHandle] = useState("")
 
-  const [isLoadingProblems, setIsLoadingProblems] = useState(false)
-  const [problems, setProblems] = useState([])
-
-  const [handlePair, setHandlePair] = useState({user: "", rival: ""})
-
-  const [isLoadingCommonContests, setIsLoadingCommonContests] = useState(false)
-  const [commonContests, setCommonContests] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [compareResult, setCompareResult] = useState(null)
+  const [compareError, setCompareError] = useState(null)
 
   const [displaySwitch, setDisplaySwitch] = useState(false)
   const [stage, setStage] = useState('NOT_SUBMITTED')
 
+  const [handlePair, setHandlePair] = useState({handle: "", rivalHandle: ""})
+
+  useEffect(() => {
+    document.title = 'Codeforces++ | Compare'
+  }, [])
+
   const onSubmit = () => {
-    setHandlePair({
-      user: userHandleValue,
-      rival: rivalHandleValue
-    })
+    setHandlePair({ handle, rivalHandle })
 
     setStage('SUBMITTED')
+    setCompareError(null)
   }
 
   const onSwitch = () => {
     setHandlePair({
-      user: rivalHandleValue,
-      rival: userHandleValue
+      handle: rivalHandle,
+      rivalHandle: handle
     })
 
-    const temp = rivalHandleValue
-    setRivalHandleValue(userHandleValue)
-    setUserHandleValue(temp)
+    const temp = rivalHandle
+    setRivalHandle(handle)
+    setHandle(temp)
+
+    setCompareError(null)
   }
 
   useEffect(() => {
-    if (handlePair.user !== "" && handlePair.rival !== "") {
-      const loadProblems = async(user, rival) => {
-        setIsLoadingProblems(true)
+    if (handlePair.handle !== "" && handlePair.rivalHandle !== "") {
+      const loadCompareResult = async(handle, rivalHandle) => {
+        try {
+          setIsLoading(true)
 
-        const probs = await compareProblems(user, rival)
+          const result = await compare(handle, rivalHandle)
 
-        setIsLoadingProblems(false)
-        setProblems(probs)
-      }
-
-      const loadCommonContests = async (user, rival) => {
-        setIsLoadingCommonContests(true)
-
-        const contests = await getCommonContests(user, rival)
-
-        setIsLoadingCommonContests(false)
-        setCommonContests(contests)
+          setIsLoading(false)
+          setCompareResult(result)
+        } catch (e) {
+          setIsLoading(false)
+          setCompareError(e)
+        }
       }
 
       setDisplaySwitch(false)
 
-      const { user, rival } = handlePair
-
-      loadProblems(user, rival)
-      loadCommonContests(user, rival)
+      loadCompareResult(handlePair.handle, handlePair.rivalHandle)
 
       setDisplaySwitch(true)
     } else
@@ -84,15 +81,15 @@ export default function ComparePage(props) {
           <TextField
             label="Handle"
             placeholder="Example: tourist"
-            onChange={e => setUserHandleValue(e.target.value)}
-            value={userHandleValue}
+            onChange={e => setHandle(e.target.value)}
+            value={handle}
           />
 
           <TextField
             label="Rival handle"
             placeholder="Example: Petr"
-            onChange={e => setRivalHandleValue(e.target.value)}
-            value={rivalHandleValue}
+            onChange={e => setRivalHandle(e.target.value)}
+            value={rivalHandle}
           />
 
           <Button
@@ -116,33 +113,52 @@ export default function ComparePage(props) {
 
         {
           stage === 'SUBMITTED' ?
-          (isLoadingProblems ?
-            <Spinner /> :
-            <div>
-              <h1 className="text-2xl font-bold"> Problems </h1>
-              <p> Problems solved by {rivalHandleValue} but not by {userHandleValue} </p>
-              <ProblemTableWithFilterForm problems={problems} />
-            </div>
+          (
+            compareError === null ?
+            null :
+            <Alert severity="error">{compareError.message}</Alert>
           ) :
           null
         }
 
         {
           stage === 'SUBMITTED' ?
-          (isLoadingCommonContests ?
-            <Spinner /> :
-            <div>
-              <h1 className="text-2xl font-bold"> Contests </h1>
-              <CommonContests
-                firstHandle={userHandleValue}
-                secondHandle={rivalHandleValue}
-                commonContests={commonContests}
-              />
-            </div>
+          (isLoading ?
+            <Spinner />:
+            <DisplayIfNotError error={compareError !== null}>
+              <CompareResult result={compareResult} />
+            </DisplayIfNotError>
           ) :
           null
         }
       </Container>
+    </div>
+  )
+}
+
+function CompareResult(props) {
+  const { result } = props
+  if (result === null)
+    return null
+
+  const { user, rival, problemsDiff, commonContests } = result
+
+  return (
+    <div>
+      <div>
+        <h1 className="text-2xl font-bold"> Problems </h1>
+        <p> Problems solved by <HandleSpan userInfo={rival} /> but not by <HandleSpan userInfo={user} /></p>
+        <ProblemTableWithFilterForm problems={problemsDiff} />
+      </div>
+
+      <div>
+        <h1 className="text-2xl font-bold"> Contests </h1>
+        <CommonContests
+          firstUser={user}
+          secondUser={rival}
+          commonContests={commonContests}
+        />
+      </div>
     </div>
   )
 }

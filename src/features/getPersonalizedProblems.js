@@ -3,8 +3,11 @@ import getProblemsetProblems from './getProblemsetProblems'
 import normalizeSubmissions from './normalizeSubmissions'
 
 export default async function getPersonalizedProblems(handle) {
-  const problems = await getProblemsetProblems()
-  const submissions = await getUserSubmissions(handle)
+  const problemsPromise = getProblemsetProblems()
+  const submissionsPromise = getUserSubmissions(handle)
+
+  const problems = await problemsPromise
+  const submissions = await submissionsPromise
 
   const normalizedSubmissions = normalizeSubmissions(submissions, problems)
 

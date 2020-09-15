@@ -15,6 +15,7 @@ import InfoIcon from '@material-ui/icons/Info'
 import TableHead from '@material-ui/core/TableHead'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import TablePaginationActions from './TablePaginationActions'
+import Alert from '@material-ui/lab/Alert'
 
 function getProblemComparator(field, order) {
   if (field === 'id') {
@@ -110,9 +111,7 @@ export default function ProblemTable(props) {
 
   if (rows.length === 0) {
     return (
-      <div className="bg-yellow-300 p-2 rounded-md text-center">
-        No problem found
-      </div>
+      <Alert severity="warning"> No problem found </Alert>
     )
   } else {
     const getRowBackgroundColor = (metadata) => {
@@ -154,7 +153,7 @@ export default function ProblemTable(props) {
               ).map((row) => (
                 <TableRow key={row.id} className={getRowBackgroundColor(row.metadata)}>
                   <TableCell size="small">
-                    <Link href={row.url} underline="always">{row.id}</Link>
+                    <Link href={row.url} underline="always" target="_blank">{row.id}</Link>
                     {
                       row.metadata && row.metadata.state !== 0 && row.metadata.submittedProblemID !== row.id &&
                       <Tooltip title={`Submitted through ${row.metadata.submittedProblemID}`}>
@@ -163,7 +162,7 @@ export default function ProblemTable(props) {
                     }
                   </TableCell>
                   <TableCell>
-                    <Link href={row.url} underline="always">{row.name}</Link>
+                    <Link href={row.url} underline="always" target="_blank">{row.name}</Link>
                   </TableCell>
                   <TableCell>
                     {row.rating}

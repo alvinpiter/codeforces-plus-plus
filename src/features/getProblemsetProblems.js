@@ -1,4 +1,5 @@
 import { problemsetProblems } from '../api/codeforces'
+import { getContestProblemURL } from '../utils/url'
 
 export default async function getProblemsetProblems() {
   const apiResult = await problemsetProblems()
@@ -20,7 +21,7 @@ export default async function getProblemsetProblems() {
       rating: prob.rating || 0,
       solvedCount: problemSolvedCountMap.get(problemID),
       tags: prob.tags,
-      url: `https://codeforces.com/contest/${prob.contestId}/problem/${prob.index}`
+      url: getContestProblemURL(prob.contestId, prob.index)
     }
 
     problems.push(problem)

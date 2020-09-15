@@ -15,6 +15,7 @@ import Hacks from './Hacks'
 import TableFooter from '@material-ui/core/TableFooter'
 import TablePagination from '@material-ui/core/TablePagination'
 import TablePaginationActions from './TablePaginationActions'
+import { getContestProblemURL } from '../utils/url'
 
 export default function StandingTable(props) {
   const {
@@ -151,7 +152,7 @@ function ProblemHeader(props) {
     <TableCell align="center">
       <div>
         <Tooltip title={problem.name}>
-          <Link href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}> {problem.index} </Link>
+          <Link href={getContestProblemURL(problem.contestId, problem.index)} target="_blank"> {problem.index} </Link>
         </Tooltip>
       </div>
     </TableCell>
