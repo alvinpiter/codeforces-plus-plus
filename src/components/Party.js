@@ -21,7 +21,7 @@ export default function Party(props) {
   if (party.teamId !== undefined) {
     teamNameComponent =
       <p>
-        <Link href={getTeamURL(party.teamId)}>
+        <Link href={getTeamURL(party.teamId)} target="_blank">
           {party.teamName}:
         </Link>
       </p>
@@ -44,7 +44,7 @@ export default function Party(props) {
     const flagComponent = <CountryFlag country={country} countryCode={countryCode} />
 
     const handleComponent =
-      <Link href={getProfileURL(handle)}>
+      <Link href={getProfileURL(handle)} target="_blank">
         {ratedFormat(handle, rating)}
       </Link>
 

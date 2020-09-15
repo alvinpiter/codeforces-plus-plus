@@ -153,7 +153,7 @@ export default function ProblemTable(props) {
               ).map((row) => (
                 <TableRow key={row.id} className={getRowBackgroundColor(row.metadata)}>
                   <TableCell size="small">
-                    <Link href={row.url} underline="always">{row.id}</Link>
+                    <Link href={row.url} underline="always" target="_blank">{row.id}</Link>
                     {
                       row.metadata && row.metadata.state !== 0 && row.metadata.submittedProblemID !== row.id &&
                       <Tooltip title={`Submitted through ${row.metadata.submittedProblemID}`}>
@@ -162,7 +162,7 @@ export default function ProblemTable(props) {
                     }
                   </TableCell>
                   <TableCell>
-                    <Link href={row.url} underline="always">{row.name}</Link>
+                    <Link href={row.url} underline="always" target="_blank">{row.name}</Link>
                   </TableCell>
                   <TableCell>
                     {row.rating}

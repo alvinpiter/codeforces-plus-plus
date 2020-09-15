@@ -10,7 +10,7 @@ export default function HandleSpan(props) {
   const rating = userInfo.rating || 0
 
   const link =
-  <Link href={getProfileURL(handle)}>
+  <Link href={getProfileURL(handle)} target="_blank">
     {ratedFormat(handle, rating)}
   </Link>
 

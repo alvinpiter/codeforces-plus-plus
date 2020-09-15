@@ -152,7 +152,7 @@ function ProblemHeader(props) {
     <TableCell align="center">
       <div>
         <Tooltip title={problem.name}>
-          <Link href={getContestProblemURL(problem.contestId, problem.index)}> {problem.index} </Link>
+          <Link href={getContestProblemURL(problem.contestId, problem.index)} target="_blank"> {problem.index} </Link>
         </Tooltip>
       </div>
     </TableCell>

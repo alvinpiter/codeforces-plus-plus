@@ -48,7 +48,7 @@ export default function CommonContests(props) {
     return (
       <Accordion key={commonContest.contest.id}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Link href={getContestURL(commonContest.contest.id)} >
+          <Link href={getContestURL(commonContest.contest.id)} target="_blank">
             {commonContest.contest.name}
           </Link>
         </AccordionSummary>
@@ -114,7 +114,7 @@ function CommonContest(props) {
               return (
                 <TableRow key={problem.index}>
                   <TableCell>
-                    <Link href={getContestProblemURL(problem.contestId, problem.index)} >
+                    <Link href={getContestProblemURL(problem.contestId, problem.index)} target="_blank">
                       {problem.index}. {problem.name}
                     </Link>
                   </TableCell>
