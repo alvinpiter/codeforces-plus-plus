@@ -4,7 +4,7 @@ import {
   getContestRatingChanges
 } from '../api/codeforces'
 import { getCountryCode } from '../utils/MyCountryList'
-import { constructFullName } from '../utils/constructFullName'
+import { constructFullName } from '../utils/user'
 
 /*
 Return object:

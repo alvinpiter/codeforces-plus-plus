@@ -14,6 +14,10 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RatingChange from './RatingChange'
 import { ratedFormat } from '../utils/rating'
+import {
+  getContestURL,
+  getContestProblemURL
+} from '../utils/url'
 
 export default function CommonContests(props) {
   const { firstHandle, secondHandle, commonContests } = props
@@ -40,7 +44,7 @@ export default function CommonContests(props) {
     return (
       <Accordion key={commonContest.contest.id}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Link href={`https://codeforces.com/contest/${commonContest.contest.id}`}>
+          <Link href={getContestURL(commonContest.contest.id)} >
             {commonContest.contest.name}
           </Link>
         </AccordionSummary>
@@ -106,7 +110,7 @@ function CommonContest(props) {
               return (
                 <TableRow key={problem.index}>
                   <TableCell>
-                    <Link href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}>
+                    <Link href={getContestProblemURL(problem.contestId, problem.index)} >
                       {problem.index}. {problem.name}
                     </Link>
                   </TableCell>

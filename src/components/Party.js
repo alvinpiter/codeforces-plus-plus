@@ -1,9 +1,14 @@
 import React from 'react'
 import { ratedFormat } from '../utils/rating'
-import { constructFullName } from '../utils/constructFullName'
+import { constructFullName } from '../utils/user'
+import {
+  getProfileURL,
+  getTeamURL
+} from '../utils/url'
 import ReactCountryFlag from 'react-country-flag'
 import Link from '@material-ui/core/Link'
 import Tooltip from '@material-ui/core/Tooltip'
+
 
 export default function Party(props) {
   const {
@@ -16,7 +21,7 @@ export default function Party(props) {
   if (party.teamId !== undefined) {
     teamNameComponent =
       <p>
-        <Link href={`https://codeforces.com/team/${party.teamId}`}>
+        <Link href={getTeamURL(party.teamId)}>
           {party.teamName}:
         </Link>
       </p>
@@ -39,7 +44,7 @@ export default function Party(props) {
     const flagComponent = <CountryFlag country={country} countryCode={countryCode} />
 
     const handleComponent =
-      <Link href={`https://codeforces.com/profile/${handle}`} >
+      <Link href={getProfileURL(handle)}>
         {ratedFormat(handle, rating)}
       </Link>
 
